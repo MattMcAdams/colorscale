@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.swatch div {
+  height: 75px;
+  max-width: 75px;
+  flex-shrink: 1;
+}
+
+.swatch.primary,
+.swatch.primary div {
+  max-width: 150px;
+  flex-grow: 1;
+}
+
+.swatch p {
+  display: inline-block;
+  opacity: 0;
+}
+
+.swatch:hover p {
+  /* content: attr(data-hex); */
+  opacity: 100;
+}
+
+.swatch:active p {
+  transform: scale(0.9);
+}
