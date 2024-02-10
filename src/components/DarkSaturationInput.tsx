@@ -8,40 +8,42 @@ const DarknessInput = () => {
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     let value = Number(e.target.value);
-    Session.updateDarkness(value);
+    Session.updateDarkSaturation(value);
   }
 
   return (
-    <div id="darknessInputField" className="space-y-2">
+    <div id="darkSaturationInputField" className="space-y-2">
       <label
-        htmlFor="darknessInput"
+        htmlFor="darkSaturationInput"
         className="block font-mono font-bold text-base"
       >
-        Darkness
+        Dark color saturation
       </label>
       <div className="flex">
         <input
           className="font-mono text-3xl font-light text-gray-700"
           style={{ maxWidth: "min-content", flexShrink: 1 }}
           type="number"
-          min="0"
+          min="-100"
           max="100"
-          id="darknessInput"
-          value={Session.darkness}
+          id="darkSaturationInput"
+          value={Session.darkSaturation}
           onChange={handleChange}
         />
-        <span className="font-mono text-3xl font-light text-gray-400">%</span>
+        <span className="font-mono text-3xl font-light text-gray-400">
+          &deg;
+        </span>
       </div>
       <input
         aria-hidden="true"
         type="range"
-        min="0"
+        min="-100"
         max="100"
-        value={Session.darkness}
+        value={Session.darkSaturation}
         onChange={handleChange}
       />
     </div>
   );
-}
+};
 
 export default DarknessInput;

@@ -8,40 +8,42 @@ const DarknessInput = () => {
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     let value = Number(e.target.value);
-    Session.updateDarkness(value);
+    Session.updateDarkRotation(value);
   }
 
   return (
-    <div id="darknessInputField" className="space-y-2">
+    <div id="darkRotationInputField" className="space-y-2">
       <label
-        htmlFor="darknessInput"
+        htmlFor="darkRotationInput"
         className="block font-mono font-bold text-base"
       >
-        Darkness
+        Dark color hue shift
       </label>
       <div className="flex">
         <input
           className="font-mono text-3xl font-light text-gray-700"
           style={{ maxWidth: "min-content", flexShrink: 1 }}
           type="number"
-          min="0"
-          max="100"
-          id="darknessInput"
-          value={Session.darkness}
+          min="-360"
+          max="360"
+          id="darkRotationInput"
+          value={Session.darkRotation}
           onChange={handleChange}
         />
-        <span className="font-mono text-3xl font-light text-gray-400">%</span>
+        <span className="font-mono text-3xl font-light text-gray-400">
+          &deg;
+        </span>
       </div>
       <input
         aria-hidden="true"
         type="range"
-        min="0"
-        max="100"
-        value={Session.darkness}
+        min="-360"
+        max="360"
+        value={Session.darkRotation}
         onChange={handleChange}
       />
     </div>
   );
-}
+};
 
 export default DarknessInput;

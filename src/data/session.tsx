@@ -6,9 +6,11 @@ interface Props {
 
 const defaults = {
   loaded: false,
-  keyColor: "FFBE98",
+  keyColor: "1D9A6C",
   darkCount: 4,
   darkness: 50,
+  darkRotation: -50,
+  darkSaturation: 15,
   nullProvider: () =>
     console.error("Context Provider for the Session is not loaded"),
 };
@@ -18,9 +20,13 @@ type contextType = {
   keyColor: string;
   darkCount: number;
   darkness: number;
+  darkRotation: number;
+  darkSaturation: number;
   updateKeyColor: (hex: string) => void;
   updateDarkCount: (count: number) => void;
   updateDarkness: (value: number) => void;
+  updateDarkRotation: (value: number) => void;
+  updateDarkSaturation: (value: number) => void;
 };
 
 const Context = createContext<contextType>({
@@ -28,15 +34,21 @@ const Context = createContext<contextType>({
   keyColor: defaults.keyColor,
   darkCount: defaults.darkCount,
   darkness: defaults.darkness,
+  darkRotation: defaults.darkRotation,
+  darkSaturation: defaults.darkSaturation,
   updateKeyColor: defaults.nullProvider,
   updateDarkCount: defaults.nullProvider,
   updateDarkness: defaults.nullProvider,
+  updateDarkRotation: defaults.nullProvider,
+  updateDarkSaturation: defaults.nullProvider,
 });
 
 const Provider: React.FC<Props> = ({ children }) => {
   const [keyColor, setKeyColor] = useState<string>(defaults.keyColor);
   const [darkCount, setDarkCount] = useState<number>(defaults.darkCount);
   const [darkness, setDarkness] = useState<number>(defaults.darkness);
+  const [darkRotation, setDarkRotation] = useState<number>(defaults.darkRotation);
+  const [darkSaturation, setDarkSaturation] = useState<number>(defaults.darkSaturation);
 
   const loaded = true;
 
@@ -62,14 +74,30 @@ const Provider: React.FC<Props> = ({ children }) => {
     setDarkness(value);
   }
 
+  function updateDarkRotation(value: number) {
+    if (value < -360) { value = -360; }
+    if (value > 360) { value = 360; }
+    setDarkRotation(value);
+  }
+
+  function updateDarkSaturation(value: number) {
+    if (value < -100) { value = -100; }
+    if (value > 100) { value = 100; }
+    setDarkSaturation(value);
+  }
+
   const exposed = {
     loaded,
     keyColor,
     darkCount,
     darkness,
+    darkRotation,
+    darkSaturation,
     updateKeyColor,
     updateDarkCount,
     updateDarkness,
+    updateDarkRotation,
+    updateDarkSaturation
   };
 
   return <Context.Provider value={exposed}>{children}</Context.Provider>;

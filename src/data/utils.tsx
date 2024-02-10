@@ -45,10 +45,10 @@ export const getColorsList = (
   // How to mix the colors
   mixColor: "white" | "black",
   // Hue rotation -360 to 360
-  // hueRotation: number,
-  // Saturation 0 to 100
-  // saturation: number,
-  // Darkness / Lightness 0 to 100 ?
+  hueRotation: number,
+  // Saturation -100 to 100
+  saturation: number,
+  // Darkness / Lightness 0 to 100
   mixAmount: number,
   // Root color
   mainColor: string
@@ -68,8 +68,8 @@ export const getColorsList = (
     if (isValidHex(numberToHex(mainColor))) {
       colorsList.push(
         Color(givenColor)
-          // .rotate(((step + 1) / colorSteps) * -hueRotation)
-          // .saturate(((step + 1) / colorSteps) * (saturation / 100))
+          .rotate(((step + 1) / colorSteps) * -hueRotation)
+          .saturate(((step + 1) / colorSteps) * (saturation / 100))
           .mix(Color(mixColor), ((mixAmount / 100) * (step + 1)) / colorSteps)
           .hex()
       );

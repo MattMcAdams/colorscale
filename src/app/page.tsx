@@ -2,9 +2,11 @@
 
 import { useSessionContext } from "../data/session";
 import { getColorsList } from "../data/utils";
-import DarknessInput from "../components/DarknessInput";
 import ColorInput from "../components/ColorInput";
 import DarkCountInput from "../components/DarkCountInput";
+import DarknessInput from "../components/DarknessInput";
+import DrakRotationInput from "../components/DarkRotationInput";
+import DarkSaturationInput from "../components/DarkSaturationInput";
 import ColorRow from "../components/ColorRow";
 
 
@@ -14,6 +16,8 @@ export default function Home() {
   const darkColors = getColorsList(
     Session.darkCount,
     "black",
+    Session.darkRotation,
+    Session.darkSaturation,
     Session.darkness,
     Session.keyColor
   ).reverse();
@@ -30,6 +34,8 @@ export default function Home() {
           <div>
             <DarkCountInput />
             <DarknessInput />
+            <DrakRotationInput />
+            <DarkSaturationInput />
           </div>
         </div>
       </main>
