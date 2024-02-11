@@ -43,17 +43,8 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 - Share settings via JSON export
 - Click button to copy all hex colors
 - Show advanced color info to see additional color formats and display WCAG contrast info
-
-## Roadmap
-
-- Create favicon
-- Create social media preview
-- Add meta tags
-- make public at color.mattmcadams.com
-- Create portfolio entry
-- Update ko-fi profile, link on website
+- Click a button to copy an SVG of all colors to be pasted into design software
 
 ## Stretch goals
 
 - Ability to define color space
-- Click a button to copy an SVG of all colors to be pasted into design software
