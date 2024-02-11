@@ -1,10 +1,10 @@
 "use client";
 
-import { numberToHex } from "../data/utils";
+import * as hex from "../functions/hex";
 
 const Swatch = (props: { hex: string; primary?: boolean }) => {
   const primary = props.primary ? " primary" : "";
-  const value = numberToHex(props.hex);
+  const value = hex.fromNumber(props.hex);
 
   function copyToClipboard() {
     navigator.clipboard.writeText(value);

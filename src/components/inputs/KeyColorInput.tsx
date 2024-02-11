@@ -1,10 +1,10 @@
 "use client";
 
 import { ChangeEvent } from "react";
-import { useSessionContext } from "../data/session";
-import { isValidHex, numberToHex } from "../data/utils";
+import { useSessionContext } from "../../data/session";
+import * as hex from "../../functions/hex";
 
-const ColorInput = () => {
+const KeyColorInput = () => {
   const Session = useSessionContext();
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
@@ -30,7 +30,7 @@ const ColorInput = () => {
           onChange={handleChange}
         />
       </div>
-      {isValidHex(numberToHex(Session.keyColor)) ? (
+      {hex.isValid(hex.fromNumber(Session.keyColor)) ? (
         <p>&nbsp;</p>
       ) : (
         <p>Invalid color code</p>
@@ -39,4 +39,4 @@ const ColorInput = () => {
   );
 };
 
-export default ColorInput;
+export default KeyColorInput;

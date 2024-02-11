@@ -28,7 +28,7 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
-## Roadmap
+## Features
 
 - Start with a "key" color
 - Set number of light and dark steps
@@ -36,8 +36,10 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 - Adjust lightness shift in both directions with easing options
 - Adjust saturation shift in both directions with easing options
 - Click each color to copy hex code
+
+## Roadmap
+
 - Click button to copy all hex colors
-- Click a button to copy an SVG of all colors to be pasted into design software
 - Easily share settings via JSON export
 - Display WCAG contrast info
 
@@ -47,3 +49,4 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 - Display a chroma graph
 - Display a hue graph
 - Ability to define color space
+- Click a button to copy an SVG of all colors to be pasted into design software
