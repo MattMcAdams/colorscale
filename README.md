@@ -2,6 +2,8 @@
 
 A tool to design color scales
 
+![screenshot](/public/thumbnail.png)
+
 Heavily inspired by:
 
 - [hihayk color scale](https://hihayk.github.io/scale/) | [repo](https://github.com/hihayk/scale)
@@ -39,14 +41,19 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 - Display a chroma graph
 - Display a hue graph
 - Share settings via JSON export
+- Click button to copy all hex colors
+- Show advanced color info to see additional color formats and display WCAG contrast info
 
 ## Roadmap
 
-- Click button to copy all hex colors
-- Display WCAG contrast info
+- Create favicon
+- Create social media preview
+- Add meta tags
+- make public at color.mattmcadams.com
+- Create portfolio entry
+- Update ko-fi profile, link on website
 
 ## Stretch goals
 
 - Ability to define color space
 - Click a button to copy an SVG of all colors to be pasted into design software
-- Maybe open a model on color click to display the color in all formats, display a11y values

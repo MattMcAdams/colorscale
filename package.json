@@ -1,6 +1,7 @@
 {
-  "name": "color-tool",
-  "version": "0.1.0",
+  "name": "colorful",
+  "version": "1.0.0",
+  "description": "A tool for creating and manipulating colors",
   "private": true,
   "license": "GPU-3.0",
   "author": {

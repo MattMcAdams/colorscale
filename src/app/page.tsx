@@ -15,6 +15,7 @@ import ConfigInput from "../components/inputs/Configuration";
 import ColorRow from "../components/ColorRow";
 import { ConnectedScatterplot } from "../components/Graph";
 import CopyColorsButton from "../components/inputs/CopyColorsButton";
+import CopySvgButton from "../components/inputs/CopySvgButton";
 
 const getChroma = (hex: string) => {
   const [, c] = chroma(hex).lch();
@@ -67,12 +68,41 @@ export default function Home() {
             <div className="space-y-4">
               <p className="block font-mono font-bold text-base">Options</p>
               <AdvColorInfoInput />
+              <div className="flex gap-x-4">
+                <CopyColorsButton colors={allColors} />
+                <CopySvgButton colors={allColors} />
+              </div>
             </div>
-            <div className="space-y-4">
+            <div>
               <span className="block font-mono font-bold text-base">
-                &nbsp;
+                About
               </span>
-              <CopyColorsButton colors={allColors} />
+              <p className="mt-4">Colorful v1.0</p>
+              <p>
+                <a
+                  href="https://www.mattmcadams.com"
+                  className="underline"
+                  target="_blank"
+                >
+                  Matt McAdams
+                </a>{" "}
+                &middot;{" "}
+                <a
+                  href="https://github.com/MattMcAdams/color-tool"
+                  target="_blank"
+                  className="underline"
+                >
+                  Open Source
+                </a>{" "}
+                &middot;{" "}
+                <a
+                  className="underline"
+                  target="_blank"
+                  href="https://ko-fi.com/mattmcadams"
+                >
+                  Donate
+                </a>
+              </p>
             </div>
           </div>
           <div id="colorScale">
@@ -152,19 +182,6 @@ export default function Home() {
           <p>Loading Configuration</p>
         </>
       )}
-      <p>
-        Color Tool &middot;{" "}
-        <a href="https://www.mattmcadams.com" className="underline">
-          Matt McAdams
-        </a>{" "}
-        &middot;{" "}
-        <a
-          href="https://github.com/MattMcAdams/color-tool"
-          className="underline"
-        >
-          Open Source
-        </a>
-      </p>
     </main>
   );
 }

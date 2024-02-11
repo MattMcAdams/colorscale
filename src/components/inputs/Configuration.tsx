@@ -16,7 +16,6 @@ const ConfigInput = () => {
 
   function applyConfig() {
     Session.loadConfiguration(configString);
-    setConfigString(localStorage.getItem("colorToolConfig") || "");
   }
 
   function loadConfig() {

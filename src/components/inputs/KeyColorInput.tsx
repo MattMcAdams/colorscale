@@ -23,7 +23,7 @@ const KeyColorInput = () => {
       <div className="flex space-x-2">
         <div className="font-mono text-3xl font-light text-gray-400 mr-">#</div>
         <input
-          className="font-mono text-3xl font-light text-gray-700"
+          className="w-full font-mono text-3xl font-light text-gray-700"
           type="text"
           id="colorInput"
           value={Session.keyColor}
