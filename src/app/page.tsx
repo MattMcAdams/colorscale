@@ -14,6 +14,7 @@ import SaturationInput from "../components/inputs/SaturationInput";
 import ConfigInput from "../components/inputs/Configuration";
 import ColorRow from "../components/ColorRow";
 import { ConnectedScatterplot } from "../components/Graph";
+import CopyColorsButton from "../components/inputs/CopyColorsButton";
 
 const getChroma = (hex: string) => {
   const [, c] = chroma(hex).lch();
@@ -61,11 +62,17 @@ export default function Home() {
     <main className="space-y-16 p-16">
       {Session.loaded ? (
         <>
-          <div id="primaryControls" className="flex flex-wrap gap-x-8 gap-y-12">
+          <div id="primaryControls" className="flex flex-wrap gap-x-8">
             <ColorInput />
             <div className="space-y-4">
               <p className="block font-mono font-bold text-base">Options</p>
               <AdvColorInfoInput />
+            </div>
+            <div className="space-y-4">
+              <span className="block font-mono font-bold text-base">
+                &nbsp;
+              </span>
+              <CopyColorsButton colors={allColors} />
             </div>
           </div>
           <div id="colorScale">

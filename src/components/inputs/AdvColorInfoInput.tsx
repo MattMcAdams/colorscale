@@ -9,7 +9,7 @@ const AdvColorInfoInput = () => {
 
   return (
     <div id={"AdvColorInfoInputField"} className="space-y-2 w-80">
-      <div className="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700">
+      <div className="flex items-center ps-4 border border-gray-300 rounded">
         <input
           id="advColorInfoInput"
           type="checkbox"
