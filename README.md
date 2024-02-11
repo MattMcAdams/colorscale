@@ -11,6 +11,7 @@ See also:
 
 - [D3-Color](https://d3js.org/d3-color)
 - [Tailwind](https://tailwindcss.com/)
+- [Flowbite Components](https://flowbite.com/docs/getting-started/introduction/)
 - [NextJS](https://nextjs.org/)
 - [React Contexts](https://react.dev/learn/passing-data-deeply-with-context)
 
@@ -25,8 +26,6 @@ npm run dev
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
 ## Features
 
@@ -50,3 +49,4 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 
 - Ability to define color space
 - Click a button to copy an SVG of all colors to be pasted into design software
+- Maybe open a model on color click to display the color in all formats, display a11y values
