@@ -39,7 +39,7 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 - Display a luminance graph
 - Display a chroma graph
 - Display a hue graph
-- Easily share settings via JSON export
+- Share settings via JSON export
 
 ## Roadmap
 

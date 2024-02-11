@@ -66,7 +66,7 @@ export default function Home() {
             {/* <p>{shareURL}</p> */}
           </div>
           <div id="colorScale">
-            <ColorRow darkColors={darkColors} lightColors={lightColors} />
+            <ColorRow darkColors={darkColors} mainColor={mainColor} lightColors={lightColors} />
           </div>
           <div id="colorControls" className="flex space-x-8">
             <div className="space-y-12">
@@ -138,6 +138,19 @@ export default function Home() {
           <p>Loading Configuration</p>
         </>
       )}
+      <p>
+        Color Tool &middot;{" "}
+        <a href="https://www.mattmcadams.com" className="underline">
+          Matt McAdams
+        </a>{" "}
+        &middot;{" "}
+        <a
+          href="https://github.com/MattMcAdams/color-tool"
+          className="underline"
+        >
+          Open Source
+        </a>
+      </p>
     </main>
   );
 }

@@ -5,12 +5,22 @@ import { useSessionContext } from "../../data/session";
 
 const ConfigInput = () => {
   const Session = useSessionContext();
+  const [configString, setConfigString] = useState(
+    localStorage.getItem("colorToolConfig") || ''
+  );
 
   function handleChange(e: ChangeEvent<HTMLTextAreaElement>) {
     let value = e.target.value;
-    Session.updateConfigString(value);
-    localStorage.setItem("colorToolConfig", JSON.stringify(value, undefined, 4));
-    Session.load(false);
+    setConfigString(value);
+  }
+
+  function applyConfig() {
+    Session.loadConfiguration(configString);
+    setConfigString(localStorage.getItem("colorToolConfig") || "");
+  }
+
+  function loadConfig() {
+    setConfigString(localStorage.getItem("colorToolConfig") || '');
   }
 
   return (
@@ -28,10 +38,24 @@ const ConfigInput = () => {
         autoCorrect="off"
         autoCapitalize="off"
         spellCheck="false"
-        style={{ height: "38rem" }}
-        value={Session.configString}
+        style={{ height: "35rem" }}
+        value={configString}
         onChange={handleChange}
       />
+      <div className="flex space-x-2">
+        <button
+          className="rounded-lg bg-blue-500 text-white font-bold text-sm border-blue-500 p-2.5"
+          onClick={applyConfig}
+        >
+          Apply Configuration
+        </button>
+        <button
+          className="rounded-lg bg-blue-500 text-white font-bold text-sm border-blue-500 p-2.5"
+          onClick={loadConfig}
+        >
+          Load Configuration
+        </button>
+      </div>
     </div>
   );
 };
