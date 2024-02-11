@@ -66,16 +66,23 @@ export default function Home() {
             {/* <p>{shareURL}</p> */}
           </div>
           <div id="colorScale">
-            <ColorRow darkColors={darkColors} mainColor={mainColor} lightColors={lightColors} />
+            <ColorRow
+              darkColors={darkColors}
+              mainColor={mainColor}
+              lightColors={lightColors}
+            />
           </div>
-          <div id="colorControls" className="flex space-x-8">
-            <div className="space-y-12">
+          <div
+            id="colorControls"
+            className="flex flex-wrap gap-x-8 gap-y-8"
+          >
+            <div className="space-y-12 w-80">
               <CountInput type="dark" />
               <BrightnessInput type="dark" />
               <RotationInput type="dark" />
               <SaturationInput type="dark" />
             </div>
-            <div className="space-y-12">
+            <div className="space-y-12 w-80">
               <CountInput type="light" />
               <BrightnessInput type="light" />
               <RotationInput type="light" />
@@ -87,7 +94,7 @@ export default function Home() {
                   Luminance · How bright is it?
                 </figcaption>
                 <ConnectedScatterplot
-                  width={300}
+                  width={320}
                   height={150}
                   yDomain={[0, 1]}
                   data={allColors.map((s) => ({
@@ -102,7 +109,7 @@ export default function Home() {
                   Chroma · How colorful is it?
                 </figcaption>
                 <ConnectedScatterplot
-                  width={300}
+                  width={320}
                   height={150}
                   yDomain={[0, 150]}
                   data={allColors.map((s) => ({
@@ -117,7 +124,7 @@ export default function Home() {
                   Hue · What color is it?
                 </figcaption>
                 <ConnectedScatterplot
-                  width={300}
+                  width={320}
                   height={150}
                   yDomain={[0, 360]}
                   data={allColors.map((s) => ({
