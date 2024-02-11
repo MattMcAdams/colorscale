@@ -36,17 +36,17 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 - Adjust lightness shift in both directions with easing options
 - Adjust saturation shift in both directions with easing options
 - Click each color to copy hex code
+- Display a luminance graph
+- Display a chroma graph
+- Display a hue graph
+- Easily share settings via JSON export
 
 ## Roadmap
 
 - Click button to copy all hex colors
-- Easily share settings via JSON export
 - Display WCAG contrast info
 
 ## Stretch goals
 
-- Display a luminance graph
-- Display a chroma graph
-- Display a hue graph
 - Ability to define color space
 - Click a button to copy an SVG of all colors to be pasted into design software

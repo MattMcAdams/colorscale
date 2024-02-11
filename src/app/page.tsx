@@ -1,6 +1,7 @@
 "use client";
 
 import chroma from "chroma-js";
+import { useEffect, useState } from "react";
 
 import { useSessionContext } from "../data/session";
 import * as hex from "../functions/hex";
@@ -10,6 +11,7 @@ import CountInput from "../components/inputs/CountInput";
 import BrightnessInput from "../components/inputs/BrightnessInput";
 import RotationInput from "../components/inputs/RotationInput";
 import SaturationInput from "../components/inputs/SaturationInput";
+import ConfigInput from "../components/inputs/Configuration";
 import ColorRow from "../components/ColorRow";
 import { ConnectedScatterplot } from "../components/Graph";
 
@@ -25,6 +27,8 @@ const getHue = (hex: string) => {
 export default function Home() {
   const Session = useSessionContext();
 
+  const mainColor = hex.isValid(hex.fromNumber(Session.keyColor)) ? hex.fromNumber(Session.keyColor) : "#000000";
+
   const darkColors = getColorsList(
     Session.darkCount,
     "black",
@@ -34,7 +38,7 @@ export default function Home() {
     Session.darkSaturationEasing,
     Session.darkness,
     Session.darknessEasing,
-    Session.keyColor,
+    mainColor,
     '#FFFFFF'
   ).reverse();
 
@@ -47,81 +51,93 @@ export default function Home() {
     Session.lightSaturationEasing,
     Session.lightness,
     Session.lightnessEasing,
-    Session.keyColor,
+    mainColor,
     '#FFFFFF'
   );
 
-  const allColors = [...darkColors, hex.fromNumber(Session.keyColor), ...lightColors]
+  const allColors = [...darkColors, mainColor, ...lightColors]
 
   return (
     <main className="space-y-16 p-16">
-      <div id="primaryControls">
-        <ColorInput />
-      </div>
-      <div id="colorScale">
-        <ColorRow darkColors={darkColors} lightColors={lightColors} />
-      </div>
-      <div id="colorControls" className="flex space-x-8">
-        <div className="space-y-12">
-          <CountInput type="dark" />
-          <BrightnessInput type="dark" />
-          <RotationInput type="dark" />
-          <SaturationInput type="dark" />
-        </div>
-        <div className="space-y-12">
-          <CountInput type="light" />
-          <BrightnessInput type="light" />
-          <RotationInput type="light" />
-          <SaturationInput type="light" />
-        </div>
-        <div className="space-y-12">
-          <figure>
-            <figcaption className="block mb-2 text-sm font-bold text-gray-900 font-mono">
-              Luminance · How bright is it?
-            </figcaption>
-            <ConnectedScatterplot
-              width={300}
-              height={150}
-              yDomain={[0, 1]}
-              data={allColors.map((s) => ({
-                x: allColors.indexOf(s),
-                y: chroma(s).luminance(),
-                hex: s,
-              }))}
-            />
-          </figure>
-          <figure>
-            <figcaption className="block mb-2 text-sm font-bold text-gray-900 font-mono">
-              Chroma · How colorful is it?
-            </figcaption>
-            <ConnectedScatterplot
-              width={300}
-              height={150}
-              yDomain={[0, 150]}
-              data={allColors.map((s) => ({
-                x: allColors.indexOf(s),
-                y: getChroma(s),
-                hex: s,
-              }))}
-            />
-          </figure>
-          <figure>
-            <figcaption className="block mb-2 text-sm font-bold text-gray-900 font-mono">
-              Hue · What color is it?
-            </figcaption>
-            <ConnectedScatterplot
-              width={300}
-              height={150}
-              yDomain={[0, 360]}
-              data={allColors.map((s) => ({
-                x: allColors.indexOf(s),
-                y: getHue(s),
-                hex: s,
-              }))}
-            />
-          </figure>
-        </div>
-      </div>
+      {Session.loaded ? (
+        <>
+          <div id="primaryControls">
+            <ColorInput />
+            {/* <p>{shareURL}</p> */}
+          </div>
+          <div id="colorScale">
+            <ColorRow darkColors={darkColors} lightColors={lightColors} />
+          </div>
+          <div id="colorControls" className="flex space-x-8">
+            <div className="space-y-12">
+              <CountInput type="dark" />
+              <BrightnessInput type="dark" />
+              <RotationInput type="dark" />
+              <SaturationInput type="dark" />
+            </div>
+            <div className="space-y-12">
+              <CountInput type="light" />
+              <BrightnessInput type="light" />
+              <RotationInput type="light" />
+              <SaturationInput type="light" />
+            </div>
+            <div className="space-y-12">
+              <figure>
+                <figcaption className="block mb-2 text-sm font-bold text-gray-900 font-mono">
+                  Luminance · How bright is it?
+                </figcaption>
+                <ConnectedScatterplot
+                  width={300}
+                  height={150}
+                  yDomain={[0, 1]}
+                  data={allColors.map((s) => ({
+                    x: allColors.indexOf(s),
+                    y: chroma(s).luminance(),
+                    hex: s,
+                  }))}
+                />
+              </figure>
+              <figure>
+                <figcaption className="block mb-2 text-sm font-bold text-gray-900 font-mono">
+                  Chroma · How colorful is it?
+                </figcaption>
+                <ConnectedScatterplot
+                  width={300}
+                  height={150}
+                  yDomain={[0, 150]}
+                  data={allColors.map((s) => ({
+                    x: allColors.indexOf(s),
+                    y: getChroma(s),
+                    hex: s,
+                  }))}
+                />
+              </figure>
+              <figure>
+                <figcaption className="block mb-2 text-sm font-bold text-gray-900 font-mono">
+                  Hue · What color is it?
+                </figcaption>
+                <ConnectedScatterplot
+                  width={300}
+                  height={150}
+                  yDomain={[0, 360]}
+                  data={allColors.map((s) => ({
+                    x: allColors.indexOf(s),
+                    y: getHue(s),
+                    hex: s,
+                  }))}
+                />
+              </figure>
+            </div>
+            <div>
+              <ConfigInput />
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          <p>Loading Configuration</p>
+        </>
+      )}
     </main>
   );
 }

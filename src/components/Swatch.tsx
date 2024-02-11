@@ -17,7 +17,7 @@ const Swatch = (props: { hex: string; primary?: boolean }) => {
         data-hex={value}
         onClick={copyToClipboard}
       ></div>
-      <p>{value}</p>
+      <p className="font-mono">{value}</p>
     </div>
   );
 };
