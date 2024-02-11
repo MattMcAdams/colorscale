@@ -14,28 +14,32 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
+.largeSwatch {
+  height: 150px;
+  width: 100%;
+}
+
 .swatch div {
   height: 75px;
   max-width: 75px;
-  flex-shrink: 1;
+  flex-grow: 1;
 }
 
 .swatch.primary,
 .swatch.primary div {
+  flex-grow: 2;
   max-width: 150px;
-  flex-grow: 1;
 }
 
-.swatch p {
+.swatch .tooltip {
   display: inline-block;
   opacity: 0;
 }
 
-.swatch:hover p {
-  /* content: attr(data-hex); */
+.swatch:hover .tooltip {
   opacity: 100;
 }
 
-.swatch:active p {
+.swatch .copy-enabled:active + .tooltip {
   transform: scale(0.9);
 }

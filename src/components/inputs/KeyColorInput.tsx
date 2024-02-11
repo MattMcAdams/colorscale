@@ -13,7 +13,7 @@ const KeyColorInput = () => {
   }
 
   return (
-    <div id="colorInput" className="space-y-4">
+    <div id="colorInput" className="space-y-4 w-80">
       <label
         htmlFor="colorInput"
         className="block font-mono font-bold text-base"

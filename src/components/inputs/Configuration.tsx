@@ -44,13 +44,13 @@ const ConfigInput = () => {
       />
       <div className="flex space-x-2">
         <button
-          className="text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 transform active:scale-90 transition-transform"
+          className="grow text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 transform active:scale-90 transition-transform"
           onClick={applyConfig}
         >
           Apply Config
         </button>
         <button
-          className="text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 transform active:scale-90 transition-transform"
+          className="grow text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 transform active:scale-90 transition-transform"
           onClick={loadConfig}
         >
           Get Current

@@ -1,12 +1,12 @@
 "use client";
 
 import chroma from "chroma-js";
-import { useEffect, useState } from "react";
 
 import { useSessionContext } from "../data/session";
 import * as hex from "../functions/hex";
 import { getColorsList } from "../functions/getColors";
 import ColorInput from "../components/inputs/KeyColorInput";
+import AdvColorInfoInput from "../components/inputs/AdvColorInfoInput";
 import CountInput from "../components/inputs/CountInput";
 import BrightnessInput from "../components/inputs/BrightnessInput";
 import RotationInput from "../components/inputs/RotationInput";
@@ -61,9 +61,12 @@ export default function Home() {
     <main className="space-y-16 p-16">
       {Session.loaded ? (
         <>
-          <div id="primaryControls">
+          <div id="primaryControls" className="flex flex-wrap gap-x-8 gap-y-12">
             <ColorInput />
-            {/* <p>{shareURL}</p> */}
+            <div className="space-y-4">
+              <p className="block font-mono font-bold text-base">Options</p>
+              <AdvColorInfoInput />
+            </div>
           </div>
           <div id="colorScale">
             <ColorRow
@@ -72,10 +75,7 @@ export default function Home() {
               lightColors={lightColors}
             />
           </div>
-          <div
-            id="colorControls"
-            className="flex flex-wrap gap-x-8 gap-y-8"
-          >
+          <div id="colorControls" className="flex flex-wrap gap-x-8 gap-y-12">
             <div className="space-y-12 w-80">
               <CountInput type="dark" />
               <BrightnessInput type="dark" />

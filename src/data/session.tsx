@@ -7,6 +7,7 @@ interface Props {
 
 const defaults = {
   loaded: false,
+  advColorInfo: false,
   keyColor: "0ea5e9",
   darkCount: 4,
   lightCount: 5,
@@ -29,6 +30,7 @@ const defaults = {
 
 type contextType = {
   loaded: boolean;
+  advColorInfo: boolean;
   keyColor: string;
   darkCount: number;
   lightCount: number;
@@ -47,6 +49,7 @@ type contextType = {
 
   load: (value: boolean) => void;
   loadConfiguration: (configString: string) => void;
+  updateAdvColorInfo: (value: boolean) => void;
   updateKeyColor: (hex: string) => void;
   updateCount: (type: "light" | "dark", count: number) => void;
   updateBrightness: (type: "light" | "dark", value: number) => void;
@@ -57,6 +60,7 @@ type contextType = {
 
 const Context = createContext<contextType>({
   loaded: defaults.loaded,
+  advColorInfo: defaults.advColorInfo,
   keyColor: defaults.keyColor,
   darkCount: defaults.darkCount,
   lightCount: defaults.lightCount,
@@ -75,6 +79,7 @@ const Context = createContext<contextType>({
 
   load: defaults.nullProvider,
   loadConfiguration: defaults.nullProvider,
+  updateAdvColorInfo: defaults.nullProvider,
   updateKeyColor: defaults.nullProvider,
   updateCount: defaults.nullProvider,
   updateBrightness: defaults.nullProvider,
@@ -85,6 +90,7 @@ const Context = createContext<contextType>({
 
 const Provider: React.FC<Props> = ({ children }) => {
   const [loaded, setLoaded] = useState<boolean>(defaults.loaded);
+  const [advColorInfo, setAdvColorInfo] = useState<boolean>(defaults.advColorInfo);
   const [keyColor, setKeyColor] = useState<string>(defaults.keyColor);
   const [darkCount, setDarkCount] = useState<number>(defaults.darkCount);
   const [lightCount, setLightCount] = useState<number>(defaults.lightCount);
@@ -159,6 +165,10 @@ const Provider: React.FC<Props> = ({ children }) => {
 
   function load(value: boolean) {
     setLoaded(value);
+  }
+
+  function updateAdvColorInfo(value: boolean) {
+    setAdvColorInfo(value);
   }
 
   function updateKeyColor(hex: string) {
@@ -242,6 +252,7 @@ const Provider: React.FC<Props> = ({ children }) => {
 
   const exposed = {
     loaded,
+    advColorInfo,
     keyColor,
     darkCount,
     lightCount,
@@ -259,6 +270,7 @@ const Provider: React.FC<Props> = ({ children }) => {
     lightSaturationEasing,
     load,
     loadConfiguration,
+    updateAdvColorInfo,
     updateKeyColor,
     updateCount,
     updateBrightness,
