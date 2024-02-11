@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useSessionContext } from "../data/session";
 import Modal from "./Modal";
 import * as hex from "../functions/hex";
+import AdvancedColorInfo from "./AdvancedColorInfo";
 
 const Swatch = (props: { hex: string; primary?: boolean }) => {
   const Session = useSessionContext();
@@ -52,9 +53,9 @@ const Swatch = (props: { hex: string; primary?: boolean }) => {
               >
                 <path
                   stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
                   d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
                 />
               </svg>
@@ -62,43 +63,7 @@ const Swatch = (props: { hex: string; primary?: boolean }) => {
             </button>
           </div>
           {/* <!-- Modal body --> */}
-          <div className="p-4 md:p-5 space-y-4">
-            <div className="largeSwatch" style={{ background: value }}></div>
-            <div className="flex flex-wrap gap-y-4 gap-x-4">
-              <div>
-                <p className="block text-sm font-bold text-gray-900 font-mono">
-                  Hex
-                </p>
-                <code
-                  className="block w-full p-2 bg-gray-50 border border-gray-300 rounded-lg range-sm transform active:scale-95 transition-transform"
-                  onClick={() => copyToClipboard(value)}
-                >
-                  {value}
-                </code>
-                <p className="block mt-4 text-sm font-bold text-gray-900 font-mono">
-                  RGB
-                </p>
-                <code
-                  className="block w-full p-2 bg-gray-50 border border-gray-300rounded-lg range-sm transform active:scale-95 transition-transform"
-                  onClick={() => copyToClipboard(hex.toRGB(value))}
-                >
-                  {hex.toRGB(value)}
-                </code>
-                <p className="block text-sm mt-4 font-bold text-gray-900 font-mono">
-                  HSL
-                </p>
-                <code
-                  className="block w-full p-2 bg-gray-50 border border-gray-300 rounded-lg range-sm transform active:scale-95 transition-transform"
-                  onClick={() => copyToClipboard(hex.toHSL(value))}
-                >
-                  {hex.toHSL(value)}
-                </code>
-              </div>
-              <div>
-                <p>Accessibility Info Coming Soon</p>
-              </div>
-            </div>
-          </div>
+          <AdvancedColorInfo hexString={props.hex} />
         </div>
       </Modal>
       <div className={"swatch" + primary}>
