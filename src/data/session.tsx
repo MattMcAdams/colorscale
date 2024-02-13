@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, use } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import type { easingOptionsType } from "../functions/ease";
 
 interface Props {
@@ -214,7 +214,7 @@ const Provider: React.FC<Props> = ({ children }) => {
 
   function updateSaturation(type: 'light' | 'dark', value: number) {
     if (value < -100) { value = -100; }
-    if (value > 100) { value = 100; }
+    if (value > 200) { value = 200; }
     if (type === 'light') {
       setLightSaturation(value);
     } else if (type === 'dark') {

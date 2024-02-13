@@ -39,7 +39,7 @@ const DarknessInput = (props: {type: 'light' | 'dark'}) => {
         className="w-full h-1 mb-6 bg-gray-200 rounded-lg appearance-none cursor-pointer range-sm"
         type="range"
         min="-100"
-        max="100"
+        max="200"
         value={props.type === 'light' ? Session.lightSaturation : Session.darkSaturation}
         onChange={handleChange}
       />
