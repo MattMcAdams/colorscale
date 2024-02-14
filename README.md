@@ -1,4 +1,4 @@
-# color-tool
+# Colorful
 
 A tool to design color scales
 
