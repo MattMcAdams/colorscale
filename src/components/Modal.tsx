@@ -50,6 +50,7 @@ const Modal: React.FC<ModalProps> = ({
     <dialog
       ref={modalRef}
       onKeyDown={handleKeyDown}
+      onBlur={() => handleCloseModal()}
       className="relative p-4 w-full max-w-3xl max-h-full rounded-lg shadow-lg"
     >
       {hasCloseBtn && (
