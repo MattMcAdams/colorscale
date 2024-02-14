@@ -1,6 +1,6 @@
 "use client";
 
-import chroma from "chroma-js";
+import Color from 'color';
 
 import { useSessionContext } from "../data/session";
 import * as hex from "../functions/hex";
@@ -16,16 +16,6 @@ import ColorRow from "../components/ColorRow";
 import { ConnectedScatterplot } from "../components/Graph";
 import CopyColorsButton from "../components/inputs/CopyColorsButton";
 import CopySvgButton from "../components/inputs/CopySvgButton";
-import SmoothingInput from "../components/inputs/SmoothingInput";
-
-const getChroma = (hex: string) => {
-  const [, c] = chroma(hex).lch();
-  return c;
-};
-
-const getHue = (hex: string) => {
-  return chroma(hex).hsl()[0];
-}
 
 export default function Home() {
   const Session = useSessionContext();
@@ -42,7 +32,6 @@ export default function Home() {
     Session.darkness,
     Session.darknessEasing,
     mainColor,
-    // Session.smoothing,
     '#FFFFFF'
   ).reverse();
 
@@ -56,7 +45,6 @@ export default function Home() {
     Session.lightness,
     Session.lightnessEasing,
     mainColor,
-    // Session.smoothing,
     '#FFFFFF'
   );
 
@@ -71,16 +59,13 @@ export default function Home() {
             <div className="space-y-4">
               <p className="block font-mono font-bold text-base">Options</p>
               <AdvColorInfoInput />
-              {/* <SmoothingInput /> */}
               <div className="flex gap-x-4">
                 <CopyColorsButton colors={allColors} />
                 <CopySvgButton colors={allColors} />
               </div>
             </div>
             <div>
-              <span className="block font-mono font-bold text-base">
-                About
-              </span>
+              <span className="block font-mono font-bold text-base">About</span>
               <p className="mt-4">Colorful v1.2</p>
               <p>
                 <a
@@ -140,7 +125,7 @@ export default function Home() {
                   yDomain={[0, 1]}
                   data={allColors.map((s) => ({
                     x: allColors.indexOf(s),
-                    y: chroma(s).luminance(),
+                    y: Color(s).luminosity(),
                     hex: s,
                   }))}
                 />
@@ -155,7 +140,7 @@ export default function Home() {
                   yDomain={[0, 150]}
                   data={allColors.map((s) => ({
                     x: allColors.indexOf(s),
-                    y: getChroma(s),
+                    y: Color(s).lch().object().c,
                     hex: s,
                   }))}
                 />
@@ -170,7 +155,7 @@ export default function Home() {
                   yDomain={[0, 360]}
                   data={allColors.map((s) => ({
                     x: allColors.indexOf(s),
-                    y: getHue(s),
+                    y: Color(s).hsl().object().h,
                     hex: s,
                   }))}
                 />

@@ -1,45 +1,38 @@
 "use client";
 
-import chroma from "chroma-js";
+import Color from 'color';
 import * as hex from "../functions/hex";
 
 const AdvancedColorInfo = (props: { hexString: string }) => {
   const hexCode = hex.fromNumber(props.hexString);
-  const rgbCode = hex.toRGB(hexCode);
-  const hslCode = hex.toHSL(hexCode);
+  const rgbCode = Color(hexCode).rgb().string();
+  const hslCode = Color(hexCode).hsl().string();
+  const lchCode = Color(hexCode).lch().string();
 
   function copyToClipboard(value: string) {
     navigator.clipboard.writeText(value);
   }
 
-  function contrast(
-    hex1: string,
-    hex2: string
-  ) {
-    const lum1 = chroma(hex1).luminance();
-    const lum2 = chroma(hex2).luminance();
-    const brightest = Math.max(lum1, lum2);
-    const darkest = Math.min(lum1, lum2);
-    return Math.floor(((brightest + 0.05) / (darkest + 0.05)) * 100) / 100;
+  //to round to n decimal places
+  function round(num: number, places: number) {
+    var multiplier = Math.pow(10, places);
+    return Math.round(num * multiplier) / multiplier;
   }
 
-  const whiteContrast = contrast('#FFFFFF', hexCode);
-  const blackContrast = contrast('#000000', hexCode);
-
-  function accessibilityCheck(contrast: number, large: boolean) {
-    if (contrast >= 4.5 && large) {
-      return 'AAA';
-    } else if (contrast >= 3 && large) {
-      return 'AA';
+  function accessibilityCheck(hex1: string, hex2: string, large: boolean) {
+    if (Color(hex1).contrast(Color(hex2)) >= 4.5 && large) {
+      return "AAA";
+    } else if (Color(hex1).contrast(Color(hex2)) >= 3 && large) {
+      return "AA";
     } else if (large) {
-      return 'FAIL';
+      return "FAIL";
     }
-    if (contrast >= 7) {
-      return 'AAA';
-    } else if (contrast >= 4.5) {
-      return 'AA';
+    if (Color(hex1).contrast(Color(hex2)) >= 7) {
+      return "AAA";
+    } else if (Color(hex1).contrast(Color(hex2)) >= 4.5) {
+      return "AA";
     }
-    return 'FAIL';
+    return "FAIL";
   }
 
   return (
@@ -75,31 +68,44 @@ const AdvancedColorInfo = (props: { hexString: string }) => {
           >
             {hslCode}
           </code>
+          <p className="block text-sm mt-4 font-bold text-gray-900 font-mono">
+            LCH
+          </p>
+          <code
+            className="block w-full p-2 bg-gray-50 border border-gray-300 rounded-lg range-sm transform active:scale-95 transition-transform"
+            onClick={() => copyToClipboard(hslCode)}
+          >
+            {lchCode}
+          </code>
         </div>
         <div>
           <h2>Accessibility</h2>
           <div>
             <p className="block mt-4 mb-2 text-sm font-bold text-gray-900 font-mono">
               White Contrast{" "}
-              <strong className="font-bold">({whiteContrast})</strong>
+              <strong className="font-bold">
+                ({round(Color(hexCode).contrast(Color("#ffffff")), 2)})
+              </strong>
             </p>
             <p className="text-sm">
-              Text: {accessibilityCheck(whiteContrast, false)}
+              Text: {accessibilityCheck(hexCode, "#ffffff", false)}
             </p>
             <p className="text-sm">
-              Headlines: {accessibilityCheck(whiteContrast, true)}
+              Headlines: {accessibilityCheck(hexCode, "#ffffff", true)}
             </p>
           </div>
           <div>
             <p className="block mt-4 mb-2 text-sm font-bold text-gray-900 font-mono">
               Black Contrast{" "}
-              <strong className="font-bold">({blackContrast})</strong>
+              <strong className="font-bold">
+                ({round(Color(hexCode).contrast(Color("#000000")), 2)})
+              </strong>
             </p>
             <p className="text-sm">
-              Text: {accessibilityCheck(blackContrast, false)}
+              Text: {accessibilityCheck(hexCode, "#000000", false)}
             </p>
             <p className="text-sm">
-              Headlines: {accessibilityCheck(blackContrast, true)}
+              Headlines: {accessibilityCheck(hexCode, "#000000", true)}
             </p>
           </div>
         </div>

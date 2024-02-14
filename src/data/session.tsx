@@ -23,7 +23,6 @@ const defaults = {
   darkSaturationEasing: "linear" as easingOptionsType,
   lightSaturation: 0,
   lightSaturationEasing: "linear" as easingOptionsType,
-  smoothing: false,
 
   nullProvider: () =>
     console.error("Context Provider for the Session is not loaded"),
@@ -47,7 +46,6 @@ type contextType = {
   darkSaturationEasing: easingOptionsType;
   lightSaturation: number;
   lightSaturationEasing: easingOptionsType;
-  smoothing: boolean;
 
   load: (value: boolean) => void;
   loadConfiguration: (configString: string) => void;
@@ -58,7 +56,6 @@ type contextType = {
   updateRotation: (type: "light" | "dark", value: number) => void;
   updateSaturation: (type: "light" | "dark", value: number) => void;
   updateEasing: (type: "light" | "dark", property: "brightness" | "saturation" | "hue", easing: easingOptionsType) => void;
-  updateSmoothing: (boolean: boolean) => void;
 };
 
 const Context = createContext<contextType>({
@@ -79,7 +76,6 @@ const Context = createContext<contextType>({
   darkSaturationEasing: defaults.darkSaturationEasing,
   lightSaturation: defaults.lightSaturation,
   lightSaturationEasing: defaults.lightSaturationEasing,
-  smoothing: defaults.smoothing,
 
   load: defaults.nullProvider,
   loadConfiguration: defaults.nullProvider,
@@ -90,7 +86,6 @@ const Context = createContext<contextType>({
   updateRotation: defaults.nullProvider,
   updateSaturation: defaults.nullProvider,
   updateEasing: defaults.nullProvider,
-  updateSmoothing: defaults.nullProvider,
 });
 
 const Provider: React.FC<Props> = ({ children }) => {
@@ -111,7 +106,6 @@ const Provider: React.FC<Props> = ({ children }) => {
   const [darkSaturationEasing, setDarkSaturationEasing] = useState<easingOptionsType>(defaults.darkSaturationEasing);
   const [lightSaturation, setLightSaturation] = useState<number>(defaults.lightSaturation);
   const [lightSaturationEasing, setLightSaturationEasing] = useState<easingOptionsType>(defaults.lightSaturationEasing);
-  const [smoothing, setSmoothing] = useState<boolean>(defaults.smoothing);
 
   useEffect(() => {
     const CONFIG = localStorage.getItem("colorToolConfig");
@@ -268,10 +262,6 @@ const Provider: React.FC<Props> = ({ children }) => {
     }
   }
 
-  function updateSmoothing(boolean: boolean) {
-    setSmoothing(boolean);
-  }
-
   const exposed = {
     loaded,
     advColorInfo,
@@ -290,7 +280,6 @@ const Provider: React.FC<Props> = ({ children }) => {
     darkSaturationEasing,
     lightSaturation,
     lightSaturationEasing,
-    smoothing,
     load,
     loadConfiguration,
     updateAdvColorInfo,
@@ -300,7 +289,6 @@ const Provider: React.FC<Props> = ({ children }) => {
     updateRotation,
     updateSaturation,
     updateEasing,
-    updateSmoothing,
   };
 
   return <Context.Provider value={exposed}>{children}</Context.Provider>;

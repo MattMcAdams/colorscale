@@ -2,7 +2,6 @@ import Color from "color";
 import type { easingOptionsType } from "./ease";
 import { ease } from "./ease";
 import * as hex from "./hex";
-import chroma from "chroma-js";
 
 export const getColorsList = (
   // The number of colors to produce steps for
@@ -23,8 +22,6 @@ export const getColorsList = (
   brightEasing: easingOptionsType,
   // Root color
   mainColor: string,
-  // Apply artificial smoothing
-  // smoothing: boolean,
   // Error color
   errorColor: string,
 ) => {
@@ -32,34 +29,6 @@ export const getColorsList = (
   // Setup color array
   const colorsList: string[] = [];
   let steps = colorSteps;
-
-  // if (smoothing) {
-  //   steps = steps * 2
-  // }
-
-  // TEMP: Consider changing to chroma-js
-  // const startColor = chroma(hex.fromNumber(mainColor));
-  // let endColor = startColor;
-
-  // if (mixColor === "white") {
-  //   if (mixAmount !== 100) {
-  //     endColor = endColor.mix('white', (mixAmount / 100));
-  //   } else endColor= chroma('white');
-  // } else if (mixColor === "black") {
-  //   if (mixAmount !== 100) {
-  //     endColor = endColor.mix('black', (mixAmount / 100));
-  //   } else endColor= chroma('black');
-  // }
-
-  // if (saturation !== 0) {
-  //   endColor = endColor.set("hsl.s", startColor.get("hsl.s") + saturation);
-  // }
-
-  // if (hueRotation !== 0) {
-  //   endColor = endColor.set("hsl.h", startColor.get("hsl.h") + hueRotation);
-  // }
-
-  // return chroma.scale([startColor, endColor]).colors(colorSteps);
 
   // Confirm main color is valid
   const givenColor = hex.isValid(hex.toNumber(mainColor))
@@ -82,11 +51,6 @@ export const getColorsList = (
       colorsList.push(errorColor);
     }
   }
-
-  // if (smoothing) {
-  //   let i = colorsList.length;
-  //   while (i--) i % 2 === 0 && (colorsList.splice(i, 1));
-  // }
 
   return colorsList;
 };

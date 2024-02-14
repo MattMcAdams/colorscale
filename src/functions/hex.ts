@@ -1,4 +1,4 @@
-import chroma from "chroma-js";
+import Color from "color";
 
 // Take hex string and add the # symbol
 export const fromNumber = (number: string) => {
@@ -33,11 +33,3 @@ export const isValid = (color: string) => {
       return false;
   }
 };
-
-export function toRGB(hex: string) {
-  return chroma(hex).css();
-}
-
-export function toHSL(hex: string) {
-  return chroma(hex).css('hsl');
-}

@@ -1,8 +1,6 @@
 "use client";
 
-import { ChangeEvent } from "react";
 import { useSessionContext } from "../../data/session";
-import EasingInput from "./EasingInput";
 
 const AdvColorInfoInput = () => {
   const Session = useSessionContext();
