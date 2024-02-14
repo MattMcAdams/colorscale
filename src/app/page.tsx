@@ -66,7 +66,7 @@ export default function Home() {
             </div>
             <div>
               <span className="block font-mono font-bold text-base">About</span>
-              <p className="mt-4">Colorful v1.2</p>
+              <p className="mt-4">Colorful v1.3.1</p>
               <p>
                 <a
                   href="https://www.mattmcadams.com"
