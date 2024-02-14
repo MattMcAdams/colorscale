@@ -16,6 +16,7 @@ import ColorRow from "../components/ColorRow";
 import { ConnectedScatterplot } from "../components/Graph";
 import CopyColorsButton from "../components/inputs/CopyColorsButton";
 import CopySvgButton from "../components/inputs/CopySvgButton";
+import SmoothingInput from "../components/inputs/SmoothingInput";
 
 const getChroma = (hex: string) => {
   const [, c] = chroma(hex).lch();
@@ -41,6 +42,7 @@ export default function Home() {
     Session.darkness,
     Session.darknessEasing,
     mainColor,
+    // Session.smoothing,
     '#FFFFFF'
   ).reverse();
 
@@ -54,6 +56,7 @@ export default function Home() {
     Session.lightness,
     Session.lightnessEasing,
     mainColor,
+    // Session.smoothing,
     '#FFFFFF'
   );
 
@@ -68,6 +71,7 @@ export default function Home() {
             <div className="space-y-4">
               <p className="block font-mono font-bold text-base">Options</p>
               <AdvColorInfoInput />
+              {/* <SmoothingInput /> */}
               <div className="flex gap-x-4">
                 <CopyColorsButton colors={allColors} />
                 <CopySvgButton colors={allColors} />
@@ -77,7 +81,7 @@ export default function Home() {
               <span className="block font-mono font-bold text-base">
                 About
               </span>
-              <p className="mt-4">Colorful v1.1</p>
+              <p className="mt-4">Colorful v1.2</p>
               <p>
                 <a
                   href="https://www.mattmcadams.com"

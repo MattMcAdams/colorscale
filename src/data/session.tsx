@@ -23,6 +23,7 @@ const defaults = {
   darkSaturationEasing: "linear" as easingOptionsType,
   lightSaturation: 0,
   lightSaturationEasing: "linear" as easingOptionsType,
+  smoothing: false,
 
   nullProvider: () =>
     console.error("Context Provider for the Session is not loaded"),
@@ -46,6 +47,7 @@ type contextType = {
   darkSaturationEasing: easingOptionsType;
   lightSaturation: number;
   lightSaturationEasing: easingOptionsType;
+  smoothing: boolean;
 
   load: (value: boolean) => void;
   loadConfiguration: (configString: string) => void;
@@ -56,6 +58,7 @@ type contextType = {
   updateRotation: (type: "light" | "dark", value: number) => void;
   updateSaturation: (type: "light" | "dark", value: number) => void;
   updateEasing: (type: "light" | "dark", property: "brightness" | "saturation" | "hue", easing: easingOptionsType) => void;
+  updateSmoothing: (boolean: boolean) => void;
 };
 
 const Context = createContext<contextType>({
@@ -76,6 +79,7 @@ const Context = createContext<contextType>({
   darkSaturationEasing: defaults.darkSaturationEasing,
   lightSaturation: defaults.lightSaturation,
   lightSaturationEasing: defaults.lightSaturationEasing,
+  smoothing: defaults.smoothing,
 
   load: defaults.nullProvider,
   loadConfiguration: defaults.nullProvider,
@@ -86,6 +90,7 @@ const Context = createContext<contextType>({
   updateRotation: defaults.nullProvider,
   updateSaturation: defaults.nullProvider,
   updateEasing: defaults.nullProvider,
+  updateSmoothing: defaults.nullProvider,
 });
 
 const Provider: React.FC<Props> = ({ children }) => {
@@ -106,6 +111,7 @@ const Provider: React.FC<Props> = ({ children }) => {
   const [darkSaturationEasing, setDarkSaturationEasing] = useState<easingOptionsType>(defaults.darkSaturationEasing);
   const [lightSaturation, setLightSaturation] = useState<number>(defaults.lightSaturation);
   const [lightSaturationEasing, setLightSaturationEasing] = useState<easingOptionsType>(defaults.lightSaturationEasing);
+  const [smoothing, setSmoothing] = useState<boolean>(defaults.smoothing);
 
   useEffect(() => {
     const CONFIG = localStorage.getItem("colorToolConfig");
@@ -117,21 +123,33 @@ const Provider: React.FC<Props> = ({ children }) => {
 
   function loadConfiguration(configString: string) {
     const CONFIG = JSON.parse(configString || "{}");
-    updateKeyColor(CONFIG.keyColor ? CONFIG.keyColor : defaults.keyColor);
-    updateCount("dark", CONFIG.darkCount ? CONFIG.darkCount : defaults.darkCount);
-    updateCount("light", CONFIG.lightCount ? CONFIG.lightCount : defaults.lightCount);
-    updateBrightness("dark", CONFIG.darkness ? CONFIG.darkness : defaults.darkness);
-    updateEasing("dark", "brightness", CONFIG.darknessEasing ? CONFIG.darknessEasing : defaults.darknessEasing);
-    updateBrightness("light", CONFIG.lightness ? CONFIG.lightness : defaults.lightness);
-    updateEasing("light", "brightness", CONFIG.lightnessEasing ? CONFIG.lightnessEasing : defaults.lightnessEasing);
-    updateRotation("dark", CONFIG.darkRotation ? CONFIG.darkRotation : defaults.darkRotation);
-    updateEasing("dark", "hue", CONFIG.darkRotationEasing ? CONFIG.darkRotationEasing : defaults.darkRotationEasing);
-    updateRotation("light", CONFIG.lightRotation ? CONFIG.lightRotation : defaults.lightRotation);
-    updateEasing("light", "hue", CONFIG.lightRotationEasing ? CONFIG.lightRotationEasing : defaults.lightRotationEasing);
-    updateSaturation("dark", CONFIG.darkSaturation ? CONFIG.darkSaturation : defaults.darkSaturation);
-    updateEasing("dark", "saturation", CONFIG.darkSaturationEasing ? CONFIG.darkSaturationEasing : defaults.darkSaturationEasing);
-    updateSaturation("light", CONFIG.lightSaturation ? CONFIG.lightSaturation : defaults.lightSaturation);
-    updateEasing("light", "saturation", CONFIG.lightSaturationEasing ? CONFIG.lightSaturationEasing : defaults.lightSaturationEasing);
+    updateKeyColor(CONFIG.keyColor !== undefined ? CONFIG.keyColor : defaults.keyColor);
+    updateCount("dark", CONFIG.darkCount !== undefined ? CONFIG.darkCount : defaults.darkCount);
+    updateCount("light", CONFIG.lightCount !== undefined ? CONFIG.lightCount : defaults.lightCount);
+    updateBrightness("dark", CONFIG.darkness !== undefined ? CONFIG.darkness : defaults.darkness);
+    updateEasing(
+      "dark",
+      "brightness",
+      CONFIG.darknessEasing !== undefined
+        ? CONFIG.darknessEasing
+        : defaults.darknessEasing
+    );
+    updateBrightness("light", CONFIG.lightness !== undefined ? CONFIG.lightness : defaults.lightness);
+    updateEasing("light", "brightness", CONFIG.lightnessEasing !== undefined ? CONFIG.lightnessEasing : defaults.lightnessEasing);
+    updateRotation("dark", CONFIG.darkRotation !== undefined ? CONFIG.darkRotation : defaults.darkRotation);
+    updateEasing("dark", "hue", CONFIG.darkRotationEasing !== undefined ? CONFIG.darkRotationEasing : defaults.darkRotationEasing);
+    updateRotation("light", CONFIG.lightRotation !== undefined ? CONFIG.lightRotation : defaults.lightRotation);
+    updateEasing("light", "hue", CONFIG.lightRotationEasing !== undefined ? CONFIG.lightRotationEasing : defaults.lightRotationEasing);
+    updateSaturation("dark", CONFIG.darkSaturation !== undefined ? CONFIG.darkSaturation : defaults.darkSaturation);
+    updateEasing("dark", "saturation", CONFIG.darkSaturationEasing !== undefined ? CONFIG.darkSaturationEasing : defaults.darkSaturationEasing);
+    updateSaturation("light", CONFIG.lightSaturation !== undefined ? CONFIG.lightSaturation : defaults.lightSaturation);
+    updateEasing(
+      "light",
+      "saturation",
+      CONFIG.lightSaturationEasing !== undefined
+        ? CONFIG.lightSaturationEasing
+        : defaults.lightSaturationEasing
+    );
   }
 
   useEffect(() => {
@@ -250,6 +268,10 @@ const Provider: React.FC<Props> = ({ children }) => {
     }
   }
 
+  function updateSmoothing(boolean: boolean) {
+    setSmoothing(boolean);
+  }
+
   const exposed = {
     loaded,
     advColorInfo,
@@ -268,6 +290,7 @@ const Provider: React.FC<Props> = ({ children }) => {
     darkSaturationEasing,
     lightSaturation,
     lightSaturationEasing,
+    smoothing,
     load,
     loadConfiguration,
     updateAdvColorInfo,
@@ -277,6 +300,7 @@ const Provider: React.FC<Props> = ({ children }) => {
     updateRotation,
     updateSaturation,
     updateEasing,
+    updateSmoothing,
   };
 
   return <Context.Provider value={exposed}>{children}</Context.Provider>;

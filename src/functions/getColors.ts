@@ -23,11 +23,19 @@ export const getColorsList = (
   brightEasing: easingOptionsType,
   // Root color
   mainColor: string,
+  // Apply artificial smoothing
+  // smoothing: boolean,
   // Error color
   errorColor: string,
 ) => {
+
   // Setup color array
   const colorsList: string[] = [];
+  let steps = colorSteps;
+
+  // if (smoothing) {
+  //   steps = steps * 2
+  // }
 
   // TEMP: Consider changing to chroma-js
   // const startColor = chroma(hex.fromNumber(mainColor));
@@ -61,19 +69,24 @@ export const getColorsList = (
   // Initialize step variable
   let step;
 
-  for (step = 0; step < colorSteps; step++) {
+  for (step = 0; step < steps; step++) {
     if (hex.isValid(hex.fromNumber(mainColor))) {
       colorsList.push(
         Color(givenColor)
-          .rotate(ease(hueEasing, step + 1, -hueRotation, colorSteps))
-          .saturate(ease(satEasing, step + 1, saturation / 100, colorSteps))
-          .mix(Color(mixColor), ease(brightEasing, step + 1, mixAmount / 100, colorSteps))
+          .rotate(ease(hueEasing, step + 1, -hueRotation, steps))
+          .saturate(ease(satEasing, step + 1, saturation / 100, steps))
+          .mix(Color(mixColor), ease(brightEasing, step + 1, mixAmount / 100, steps))
           .hex()
       );
     } else {
       colorsList.push(errorColor);
     }
   }
+
+  // if (smoothing) {
+  //   let i = colorsList.length;
+  //   while (i--) i % 2 === 0 && (colorsList.splice(i, 1));
+  // }
 
   return colorsList;
 };
