@@ -196,7 +196,7 @@ const Provider: React.FC<Props> = ({ children }) => {
 
   function updateCount(type: 'light' | 'dark', count: number) {
     if (count < 0) { count = 0; }
-    if (count > 10) { count = 10; }
+    if (count > 50) { count = 50; }
     if (type === 'light') {
       setLightCount(count);
     } else if (type === 'dark') {

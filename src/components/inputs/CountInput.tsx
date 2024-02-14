@@ -22,7 +22,7 @@ const DarkCountInput = (props: {type: 'light' | 'dark'}) => {
       <input
         className="rounded-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5"
         type="number"
-        max="10"
+        max="50"
         min="0"
         id={props.type + "CountInput"}
         value={props.type === 'light' ? Session.lightCount : Session.darkCount}
