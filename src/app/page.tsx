@@ -94,7 +94,10 @@ export default function Home() {
               </p>
             </div>
           </div>
-          <div id="colorScale">
+          <div
+            id="colorScale"
+            className="sticky top-0 pt-8 pb-3 overflow-x-auto bg-white border-b border-gray-300"
+          >
             <ColorRow
               darkColors={darkColors}
               mainColor={mainColor}
