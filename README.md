@@ -37,14 +37,12 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 - Adjust lightness shift in both directions with easing options
 - Adjust saturation shift in both directions with easing options
 - Click each color to copy hex code
+- Toggle advanced color mode to see additional information instead
+  - Display WCAG Contrast and accessibility information
+  - Display and click to copy color formats hex, rgb, hsl, and lch
 - Display a luminance graph
 - Display a chroma graph
 - Display a hue graph
 - Share settings via JSON export
 - Click button to copy all hex colors
-- Show advanced color info to see additional color formats and display WCAG contrast info
 - Click a button to copy an SVG of all colors to be pasted into design software
-
-## Stretch goals
-
-- Ability to define color space

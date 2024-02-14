@@ -5,9 +5,27 @@ import * as hex from "../functions/hex";
 
 const AdvancedColorInfo = (props: { hexString: string }) => {
   const hexCode = hex.fromNumber(props.hexString);
-  const rgbCode = Color(hexCode).rgb().string();
-  const hslCode = Color(hexCode).hsl().string();
-  const lchCode = Color(hexCode).lch().string();
+  const rgb = Color(hexCode).rgb().object();
+  const hsl = Color(hexCode).hsl().object();
+  const lch = Color(hexCode).lch().object();
+
+  const rgbCode = "rgb(" + rgb.r + " " + rgb.g + " " + rgb.b + ")";
+  const hslCode =
+    "hsl(" +
+    round(hsl.h, 4) +
+    " " +
+    round(hsl.s, 4) +
+    "% " +
+    round(hsl.l, 4) +
+    "%)";
+  const lchCode =
+    "lch(" +
+    round(lch.l, 4) +
+    "% " +
+    round(lch.c, 4) +
+    " " +
+    round(lch.h, 4) +
+    ")";
 
   function copyToClipboard(value: string) {
     navigator.clipboard.writeText(value);
@@ -39,8 +57,11 @@ const AdvancedColorInfo = (props: { hexString: string }) => {
     <div className="p-4 md:p-5 space-y-4">
       <div className="largeSwatch" style={{ background: hexCode }}></div>
       <div className="flex flex-wrap gap-y-4 gap-x-4">
-        <div>
+        <div className="basis-1/2">
           <h2>Formats</h2>
+          <p className="block text-xs text-gray-500">
+            Please note that all numbers have been rounded to the 4th decimal point.
+          </p>
           <p className="block mt-4 text-sm font-bold text-gray-900 font-mono">
             Hex
           </p>
@@ -73,7 +94,7 @@ const AdvancedColorInfo = (props: { hexString: string }) => {
           </p>
           <code
             className="block w-full p-2 bg-gray-50 border border-gray-300 rounded-lg range-sm transform active:scale-95 transition-transform"
-            onClick={() => copyToClipboard(hslCode)}
+            onClick={() => copyToClipboard(lchCode)}
           >
             {lchCode}
           </code>
