@@ -51,7 +51,7 @@ export default function Home() {
   const allColors = [...darkColors, mainColor, ...lightColors]
 
   return (
-    <main className="space-y-16 p-16">
+    <main className="space-y-16 lg:p-16 md:p-8 p-4">
       {Session.loaded ? (
         <>
           <div id="primaryControls" className="flex flex-wrap gap-x-8">
