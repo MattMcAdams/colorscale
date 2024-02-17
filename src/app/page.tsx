@@ -87,7 +87,7 @@ export default function Home() {
                 <a
                   className="underline"
                   target="_blank"
-                  href="https://ko-fi.com/mattmcadams"
+                  href="https://mattmcadams.com/donate"
                 >
                   Donate
                 </a>
