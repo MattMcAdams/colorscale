@@ -3,23 +3,23 @@
 import { ChangeEvent, useState } from "react";
 import { useSessionContext } from "../../data/session";
 
-const ConfigInput = () => {
+const LibraryConfigInput = () => {
   const Session = useSessionContext();
-  const [configString, setConfigString] = useState(
-    localStorage.getItem("colorToolConfig") || ''
+  const [libraryString, setLibraryString] = useState(
+    localStorage.getItem("colorToolLibrary") || ""
   );
 
   function handleChange(e: ChangeEvent<HTMLTextAreaElement>) {
     let value = e.target.value;
-    setConfigString(value);
+    setLibraryString(value);
   }
 
   function applyConfig() {
-    Session.loadConfig(configString);
+    Session.loadLibrary(libraryString);
   }
 
   function loadConfig() {
-    setConfigString(localStorage.getItem("colorToolConfig") || '');
+    setLibraryString(localStorage.getItem("colorToolLibrary") || "");
   }
 
   return (
@@ -38,7 +38,7 @@ const ConfigInput = () => {
         autoCapitalize="off"
         spellCheck="false"
         style={{ height: "35rem" }}
-        value={configString}
+        value={libraryString}
         onChange={handleChange}
       />
       <div className="flex space-x-2">
@@ -59,4 +59,4 @@ const ConfigInput = () => {
   );
 };
 
-export default ConfigInput;
+export default LibraryConfigInput;

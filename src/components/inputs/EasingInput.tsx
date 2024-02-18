@@ -1,64 +1,38 @@
 "use client";
 
 import { ChangeEvent } from "react";
-import { useSessionContext } from "../../data/session";
-import { easingOptions, easingOptionsType } from "../../functions/ease";
+import { easingOptions } from "../../types/easing";
 
 const EasingInput = (props: {
-  type: "light" | "dark",
-  property: 'hue' | 'saturation' | 'brightness',
+  name: string;
+  label: string;
+  value: easingOptions;
+  changeHandler: (e: ChangeEvent<HTMLSelectElement>) => void;
 }) => {
-  const Session = useSessionContext();
-
-  let value = '';
-  if (props.type === 'light') {
-    if (props.property === 'hue') {
-      value = Session.lightRotationEasing;
-    } else if (props.property === 'saturation') {
-      value = Session.lightSaturationEasing;
-    } else {
-      value = Session.lightnessEasing;
-    }
-  } else {
-    if (props.property === 'hue') {
-      value = Session.darkRotationEasing;
-    } else if (props.property === 'saturation') {
-      value = Session.darkSaturationEasing;
-    } else {
-      value = Session.darknessEasing;
-    }
-  }
-
-  function handleChange(e: ChangeEvent<HTMLSelectElement>) {
-    let value = e.target.value as easingOptionsType;
-    Session.updateEasing(props.type, props.property, value);
-  }
 
   const easingKeys = [];
 
   for (let option in easingOptions) {
-    easingKeys.push(
-      <option value={option}>{option}</option>
-    );
+    easingKeys.push(<option value={option}>{option}</option>);
   }
 
   return (
     <div
-      id={props.type + "_" + props.property + "CountInputField"}
+      id={props.name + "InputField"}
       className="space-y-2"
     >
       <label
-        htmlFor={props.type + "_" + props.property + "CountInput"}
+        htmlFor={props.name + "Input"}
         className="block mb-2 text-sm font-medium text-gray-900 font-mono hidden"
       >
-        Easing
+        {props.label}
       </label>
       <select
         name="cars"
-        id={props.type + "_" + props.property + "CountInput"}
+        id={props.name + "Input"}
         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-        value={value}
-        onChange={handleChange}
+        value={props.value}
+        onChange={props.changeHandler}
       >
         {easingOptions.map((type) => (
           <option key={`${type}`} value={type}>

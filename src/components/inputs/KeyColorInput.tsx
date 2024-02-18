@@ -13,7 +13,7 @@ const KeyColorInput = () => {
   }
 
   return (
-    <div id="colorInput" className="space-y-4 w-80">
+    <div id="colorInput" className="w-80">
       <label
         htmlFor="colorInput"
         className="block font-mono font-bold text-base"
@@ -26,11 +26,11 @@ const KeyColorInput = () => {
           className="w-full font-mono text-3xl font-light text-gray-700"
           type="text"
           id="colorInput"
-          value={Session.keyColor}
+          value={Session.config.keyColor}
           onChange={handleChange}
         />
       </div>
-      {hex.isValid(hex.fromNumber(Session.keyColor)) ? (
+      {hex.isValid(hex.fromNumber(Session.config.keyColor)) ? (
         <p>&nbsp;</p>
       ) : (
         <p>Invalid color code</p>

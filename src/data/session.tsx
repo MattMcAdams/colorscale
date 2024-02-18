@@ -1,187 +1,48 @@
-import { createContext, useContext, useState, useEffect } from "react";
-import type { easingOptionsType } from "../functions/ease";
+import { createContext, useContext, useState, useEffect, useCallback } from "react";
+import { easingOptions } from "../types/easing";
+import type { config } from "../types/configObj";
+import type { context } from "../types/context";
+
+import { defaults, nullProvider } from "./defaults";
+import { limits } from "./limits";
 
 interface Props {
   children: React.ReactNode;
 }
 
-const defaults = {
-  loaded: false,
-  advColorInfo: false,
-  keyColor: "0ea5e9",
-  darkCount: 4,
-  lightCount: 5,
-  darkness: 50,
-  darknessEasing: "linear" as easingOptionsType,
-  lightness: 80,
-  lightnessEasing: "linear" as easingOptionsType,
-  darkRotation: -10,
-  darkRotationEasing: "linear" as easingOptionsType,
-  lightRotation: 25,
-  lightRotationEasing: "linear" as easingOptionsType,
-  darkSaturation: 15,
-  darkSaturationEasing: "linear" as easingOptionsType,
-  lightSaturation: 0,
-  lightSaturationEasing: "linear" as easingOptionsType,
-
-  nullProvider: () =>
-    console.error("Context Provider for the Session is not loaded"),
-};
-
-type contextType = {
-  loaded: boolean;
-  advColorInfo: boolean;
-  keyColor: string;
-  darkCount: number;
-  lightCount: number;
-  darkness: number;
-  darknessEasing: easingOptionsType;
-  lightness: number;
-  lightnessEasing: easingOptionsType;
-  darkRotation: number;
-  darkRotationEasing: easingOptionsType;
-  lightRotation: number;
-  lightRotationEasing: easingOptionsType;
-  darkSaturation: number;
-  darkSaturationEasing: easingOptionsType;
-  lightSaturation: number;
-  lightSaturationEasing: easingOptionsType;
-
-  load: (value: boolean) => void;
-  loadConfiguration: (configString: string) => void;
-  updateAdvColorInfo: (value: boolean) => void;
-  updateKeyColor: (hex: string) => void;
-  updateCount: (type: "light" | "dark", count: number) => void;
-  updateBrightness: (type: "light" | "dark", value: number) => void;
-  updateRotation: (type: "light" | "dark", value: number) => void;
-  updateSaturation: (type: "light" | "dark", value: number) => void;
-  updateEasing: (type: "light" | "dark", property: "brightness" | "saturation" | "hue", easing: easingOptionsType) => void;
-};
-
-const Context = createContext<contextType>({
-  loaded: defaults.loaded,
-  advColorInfo: defaults.advColorInfo,
-  keyColor: defaults.keyColor,
-  darkCount: defaults.darkCount,
-  lightCount: defaults.lightCount,
-  darkness: defaults.darkness,
-  darknessEasing: defaults.darknessEasing,
-  lightness: defaults.lightness,
-  lightnessEasing: defaults.lightnessEasing,
-  darkRotation: defaults.darkRotation,
-  darkRotationEasing: defaults.darkRotationEasing,
-  lightRotation: defaults.lightRotation,
-  lightRotationEasing: defaults.lightRotationEasing,
-  darkSaturation: defaults.darkSaturation,
-  darkSaturationEasing: defaults.darkSaturationEasing,
-  lightSaturation: defaults.lightSaturation,
-  lightSaturationEasing: defaults.lightSaturationEasing,
-
-  load: defaults.nullProvider,
-  loadConfiguration: defaults.nullProvider,
-  updateAdvColorInfo: defaults.nullProvider,
-  updateKeyColor: defaults.nullProvider,
-  updateCount: defaults.nullProvider,
-  updateBrightness: defaults.nullProvider,
-  updateRotation: defaults.nullProvider,
-  updateSaturation: defaults.nullProvider,
-  updateEasing: defaults.nullProvider,
+const Context = createContext<context>({
+  ...defaults,
+  loadConfig: nullProvider,
+  updateAdvColorInfo: nullProvider,
+  updateKeyColor: nullProvider,
+  updateConfig: nullProvider,
+  updateConfigEasing: nullProvider,
+  saveToLibrary: nullProvider,
+  deleteFromLibrary: nullProvider,
+  loadLibrary: nullProvider,
 });
 
 const Provider: React.FC<Props> = ({ children }) => {
-  const [loaded, setLoaded] = useState<boolean>(defaults.loaded);
+  /* =================================================================
+  /* SECTION Stores
+  ================================================================= */
+
+  const providerLoaded = true;
+  const [configLoaded, setConfigLoaded] = useState<boolean>(defaults.configLoaded);
+  const [config, setConfig] = useState<config>({ ...defaults.config });
   const [advColorInfo, setAdvColorInfo] = useState<boolean>(defaults.advColorInfo);
-  const [keyColor, setKeyColor] = useState<string>(defaults.keyColor);
-  const [darkCount, setDarkCount] = useState<number>(defaults.darkCount);
-  const [lightCount, setLightCount] = useState<number>(defaults.lightCount);
-  const [darkness, setDarkness] = useState<number>(defaults.darkness);
-  const [darknessEasing, setDarknessEasing] = useState<easingOptionsType>(defaults.darknessEasing);
-  const [lightness, setLightness] = useState<number>(defaults.lightness);
-  const [lightnessEasing, setLightnessEasing] = useState<easingOptionsType>(defaults.lightnessEasing);
-  const [darkRotation, setDarkRotation] = useState<number>(defaults.darkRotation);
-  const [darkRotationEasing, setDarkRotationEasing] = useState<easingOptionsType>(defaults.darkRotationEasing);
-  const [lightRotation, setLightRotation] = useState<number>(defaults.lightRotation);
-  const [lightRotationEasing, setLightRotationEasing] = useState<easingOptionsType>(defaults.lightRotationEasing);
-  const [darkSaturation, setDarkSaturation] = useState<number>(defaults.darkSaturation);
-  const [darkSaturationEasing, setDarkSaturationEasing] = useState<easingOptionsType>(defaults.darkSaturationEasing);
-  const [lightSaturation, setLightSaturation] = useState<number>(defaults.lightSaturation);
-  const [lightSaturationEasing, setLightSaturationEasing] = useState<easingOptionsType>(defaults.lightSaturationEasing);
+  const [library, setLibrary] = useState<config[]>([]);
+  const [libraryLoaded, setLibraryLoaded] = useState<boolean>(false);
 
-  useEffect(() => {
-    const CONFIG = localStorage.getItem("colorToolConfig");
-    if (!loaded && CONFIG) {
-      loadConfiguration(CONFIG);
-    }
-    setLoaded(true);
-  }, [loaded]);
-
-  function loadConfiguration(configString: string) {
-    const CONFIG = JSON.parse(configString || "{}");
-    updateKeyColor(CONFIG.keyColor !== undefined ? CONFIG.keyColor : defaults.keyColor);
-    updateCount("dark", CONFIG.darkCount !== undefined ? CONFIG.darkCount : defaults.darkCount);
-    updateCount("light", CONFIG.lightCount !== undefined ? CONFIG.lightCount : defaults.lightCount);
-    updateBrightness("dark", CONFIG.darkness !== undefined ? CONFIG.darkness : defaults.darkness);
-    updateEasing(
-      "dark",
-      "brightness",
-      CONFIG.darknessEasing !== undefined
-        ? CONFIG.darknessEasing
-        : defaults.darknessEasing
-    );
-    updateBrightness("light", CONFIG.lightness !== undefined ? CONFIG.lightness : defaults.lightness);
-    updateEasing("light", "brightness", CONFIG.lightnessEasing !== undefined ? CONFIG.lightnessEasing : defaults.lightnessEasing);
-    updateRotation("dark", CONFIG.darkRotation !== undefined ? CONFIG.darkRotation : defaults.darkRotation);
-    updateEasing("dark", "hue", CONFIG.darkRotationEasing !== undefined ? CONFIG.darkRotationEasing : defaults.darkRotationEasing);
-    updateRotation("light", CONFIG.lightRotation !== undefined ? CONFIG.lightRotation : defaults.lightRotation);
-    updateEasing("light", "hue", CONFIG.lightRotationEasing !== undefined ? CONFIG.lightRotationEasing : defaults.lightRotationEasing);
-    updateSaturation("dark", CONFIG.darkSaturation !== undefined ? CONFIG.darkSaturation : defaults.darkSaturation);
-    updateEasing("dark", "saturation", CONFIG.darkSaturationEasing !== undefined ? CONFIG.darkSaturationEasing : defaults.darkSaturationEasing);
-    updateSaturation("light", CONFIG.lightSaturation !== undefined ? CONFIG.lightSaturation : defaults.lightSaturation);
-    updateEasing(
-      "light",
-      "saturation",
-      CONFIG.lightSaturationEasing !== undefined
-        ? CONFIG.lightSaturationEasing
-        : defaults.lightSaturationEasing
-    );
-  }
-
-  useEffect(() => {
-    function saveToLocalStorage() {
-      const data = {
-        keyColor: keyColor,
-        darkCount: darkCount,
-        lightCount: lightCount,
-        darkness: darkness,
-        darknessEasing: darknessEasing,
-        lightness: lightness,
-        lightnessEasing: lightnessEasing,
-        darkRotation: darkRotation,
-        darkRotationEasing: darkRotationEasing,
-        lightRotation: lightRotation,
-        lightRotationEasing: lightRotationEasing,
-        darkSaturation: darkSaturation,
-        darkSaturationEasing: darkSaturationEasing,
-        lightSaturation: lightSaturation,
-        lightSaturationEasing: lightSaturationEasing,
-      };
-      if (loaded) {
-        localStorage.setItem(
-          "colorToolConfig",
-          JSON.stringify(data, undefined, 4)
-        );
-      }
-    }
-    saveToLocalStorage();
-  }, [loaded, keyColor, darkCount, lightCount, darkness, darknessEasing, lightness, lightnessEasing, darkRotation, darkRotationEasing, lightRotation, lightRotationEasing, darkSaturation, darkSaturationEasing, lightSaturation, lightSaturationEasing]);
-
-  function load(value: boolean) {
-    setLoaded(value);
-  }
+  /* !SECTION Stores */
 
   function updateAdvColorInfo(value: boolean) {
     setAdvColorInfo(value);
   }
+
+  /* =================================================================
+  /* SECTION Update configuration functions
+  ================================================================= */
 
   function updateKeyColor(hex: string) {
     let value = hex.toUpperCase();
@@ -191,104 +52,309 @@ const Provider: React.FC<Props> = ({ children }) => {
     if (value.length > 8) {
       value = value.substring(0, 8);
     }
-    setKeyColor(value);
+    setConfig({ ...config, keyColor: value });
   };
 
-  function updateCount(type: 'light' | 'dark', count: number) {
-    if (count < 0) { count = 0; }
-    if (count > 50) { count = 50; }
-    if (type === 'light') {
-      setLightCount(count);
-    } else if (type === 'dark') {
-      setDarkCount(count);
+  function updateConfig(
+    key: "light" | "dark",
+    property: "brightness" | "saturation" | "angle" | "count",
+    value: number
+  ) {
+    const newConfig = { ...config };
+    let sanitizedValue = value;
+    if (sanitizedValue < limits[property].min) {
+      sanitizedValue = limits[property].min;
     }
+    if (sanitizedValue > limits[property].max) {
+      sanitizedValue = limits[property].max;
+    }
+    newConfig[key][property] = sanitizedValue;
+    setConfig(newConfig);
   };
 
-  function updateBrightness(type: 'light' | 'dark', value: number) {
-    if (value < 0) { value = 0; }
-    if (value > 100) { value = 100; }
-    if (type === 'light') {
-      setLightness(value);
-    } else if (type === 'dark') {
-      setDarkness(value);
+  function updateConfigEasing(
+    key: "light" | "dark",
+    property: "brightness" | "saturation" | "angle",
+    easing: easingOptions
+  ) {
+    const newConfig = { ...config };
+    let sanitizedValue = easing;
+    if (!easingOptions.includes(easing)) {
+      sanitizedValue = "linear";
     }
-  }
+    newConfig[key][`${property}Ease`] = sanitizedValue;
+    setConfig(newConfig);
+  };
 
-  function updateRotation(type: 'light' | 'dark', value: number) {
-    if (value < -360) { value = -360; }
-    if (value > 360) { value = 360; }
-    if (type === 'light') {
-      setLightRotation(value);
-    } else if (type === 'dark') {
-      setDarkRotation(value);
+  /* !SECTION Update configuration functions */
+  /* =================================================================
+  /* SECTION Load configuration functions
+  ================================================================= */
+
+  function loadLegacyConfig(configString: string) {
+    const CONFIG = JSON.parse(configString || "{}");
+    const newConfig = {
+      keyColor: defaults.config.keyColor,
+      dark: {
+        count: defaults.config.dark.count,
+        brightness: defaults.config.dark.brightness,
+        brightnessEase: defaults.config.dark.brightnessEase,
+        angle: defaults.config.dark.angle,
+        angleEase: defaults.config.dark.angleEase,
+        saturation: defaults.config.dark.saturation,
+        saturationEase: defaults.config.dark.saturationEase,
+      },
+      light: {
+        count: defaults.config.light.count,
+        brightness: defaults.config.light.brightness,
+        brightnessEase: defaults.config.light.brightnessEase,
+        angle: defaults.config.light.angle,
+        angleEase: defaults.config.light.angleEase,
+        saturation: defaults.config.light.saturation,
+        saturationEase: defaults.config.light.saturationEase,
+      },
+    };
+    if (CONFIG.keyColor !== undefined) {
+      newConfig.keyColor = CONFIG.keyColor;
     }
-  }
-
-  function updateSaturation(type: 'light' | 'dark', value: number) {
-    if (value < -100) { value = -100; }
-    if (value > 200) { value = 200; }
-    if (type === 'light') {
-      setLightSaturation(value);
-    } else if (type === 'dark') {
-      setDarkSaturation(value);
+    if (CONFIG.darkCount !== undefined) {
+      newConfig.dark.count = CONFIG.darkCount;
     }
-  }
+    if (CONFIG.lightCount !== undefined) {
+      newConfig.light.count = CONFIG.lightCount;
+    }
+    if (CONFIG.darkness !== undefined) {
+      newConfig.dark.brightness = CONFIG.darkness;
+    }
+    if (CONFIG.darknessEasing !== undefined) {
+      newConfig.dark.brightnessEase = CONFIG.darknessEasing;
+    }
+    if (CONFIG.lightness !== undefined) {
+      newConfig.light.brightness = CONFIG.lightness;
+    }
+    if (CONFIG.lightnessEasing !== undefined) {
+      newConfig.light.brightnessEase = CONFIG.lightnessEasing;
+    }
+    if (CONFIG.darkRotation !== undefined) {
+      newConfig.dark.angle = CONFIG.darkRotation;
+    }
+    if (CONFIG.darkRotationEasing !== undefined) {
+      newConfig.dark.angleEase = CONFIG.darkRotationEasing;
+    }
+    if (CONFIG.lightRotation !== undefined) {
+      newConfig.light.angle = CONFIG.lightRotation;
+    }
+    if (CONFIG.lightRotationEasing !== undefined) {
+      newConfig.light.angleEase = CONFIG.lightRotationEasing;
+    }
+    if (CONFIG.darkSaturation !== undefined) {
+      newConfig.dark.saturation = CONFIG.darkSaturation;
+    }
+    if (CONFIG.darkSaturationEasing !== undefined) {
+      newConfig.dark.saturationEase = CONFIG.darkSaturationEasing;
+    }
+    if (CONFIG.lightSaturation !== undefined) {
+      newConfig.light.saturation = CONFIG.lightSaturation;
+    }
+    if (CONFIG.lightSaturationEasing !== undefined) {
+      newConfig.light.saturationEase = CONFIG.lightSaturationEasing;
+    }
+    setConfig(newConfig);
+  };
 
-  function updateEasing(type: 'light' | 'dark', property: 'brightness' | 'saturation' | 'hue', easing: easingOptionsType) {
-    if (type === 'light') {
-      switch (property) {
-        case 'brightness':
-          setLightnessEasing(easing);
-          break;
-        case 'saturation':
-          setLightSaturationEasing(easing);
-          break;
-        case 'hue':
-          setLightRotationEasing(easing);
-          break;
+  const loadConfig = useCallback((configString: string) => {
+    const CONFIG = JSON.parse(configString || "{}");
+    const newConfig = {
+      keyColor: defaults.config.keyColor,
+      dark: {
+        count: defaults.config.dark.count,
+        brightness: defaults.config.dark.brightness,
+        brightnessEase: defaults.config.dark.brightnessEase,
+        angle: defaults.config.dark.angle,
+        angleEase: defaults.config.dark.angleEase,
+        saturation: defaults.config.dark.saturation,
+        saturationEase: defaults.config.dark.saturationEase,
+      },
+      light: {
+        count: defaults.config.light.count,
+        brightness: defaults.config.light.brightness,
+        brightnessEase: defaults.config.light.brightnessEase,
+        angle: defaults.config.light.angle,
+        angleEase: defaults.config.light.angleEase,
+        saturation: defaults.config.light.saturation,
+        saturationEase: defaults.config.light.saturationEase,
       }
-    } else if (type === 'dark') {
-      switch (property) {
-        case 'brightness':
-          setDarknessEasing(easing);
-          break;
-        case 'saturation':
-          setDarkSaturationEasing(easing);
-          break;
-        case 'hue':
-          setDarkRotationEasing(easing);
-          break;
+    };
+    if (
+      CONFIG.darkCount ||
+      CONFIG.lightCount ||
+      CONFIG.darkness ||
+      CONFIG.darknessEasing ||
+      CONFIG.lightness ||
+      CONFIG.lightnessEasing ||
+      CONFIG.darkRotation ||
+      CONFIG.darkRotationEasing ||
+      CONFIG.lightRotation ||
+      CONFIG.lightRotationEasing ||
+      CONFIG.darkSaturation ||
+      CONFIG.darkSaturationEasing ||
+      CONFIG.lightSaturation ||
+      CONFIG.lightSaturationEasing)
+    {
+      loadLegacyConfig(configString);
+    } else {
+      if (CONFIG.keyColor !== undefined) {
+        newConfig.keyColor = CONFIG.keyColor;
       }
+      if (CONFIG.dark !== undefined) {
+        if (CONFIG.dark.count !== undefined) {
+          newConfig.dark.count = CONFIG.dark.count;
+        }
+        if (CONFIG.dark.brightness !== undefined) {
+          newConfig.dark.brightness = CONFIG.dark.brightness;
+        }
+        if (CONFIG.dark.brightnessEase !== undefined) {
+          newConfig.dark.brightnessEase = CONFIG.dark.brightnessEase;
+        }
+        if (CONFIG.dark.angle !== undefined) {
+          newConfig.dark.angle = CONFIG.dark.angle;
+        }
+        if (CONFIG.dark.angleEase !== undefined) {
+          newConfig.dark.angleEase = CONFIG.dark.angleEase;
+        }
+        if (CONFIG.dark.saturation !== undefined) {
+          newConfig.dark.saturation = CONFIG.dark.saturation;
+        }
+        if (CONFIG.dark.saturationEase !== undefined) {
+          newConfig.dark.saturationEase = CONFIG.dark.saturationEase;
+        }
+      }
+      if (CONFIG.light !== undefined) {
+        if (CONFIG.light.count !== undefined) {
+          newConfig.light.count = CONFIG.light.count;
+        }
+        if (CONFIG.light.brightness !== undefined) {
+          newConfig.light.brightness = CONFIG.light.brightness;
+        }
+        if (CONFIG.light.brightnessEase !== undefined) {
+          newConfig.light.brightnessEase = CONFIG.light.brightnessEase;
+        }
+        if (CONFIG.light.angle !== undefined) {
+          newConfig.light.angle = CONFIG.light.angle;
+        }
+        if (CONFIG.light.angleEase !== undefined) {
+          newConfig.light.angleEase = CONFIG.light.angleEase;
+        }
+        if (CONFIG.light.saturation !== undefined) {
+          newConfig.light.saturation = CONFIG.light.saturation;
+        }
+        if (CONFIG.light.saturationEase !== undefined) {
+          newConfig.light.saturationEase = CONFIG.light.saturationEase;
+        }
+      }
+      setConfig(newConfig);
     }
+    setConfigLoaded(true);
+  }, []);
+
+  /* !SECTION Load configuration functions */
+  /* =================================================================
+  /* SECTION Load Config on page load
+  ================================================================= */
+
+  useEffect(() => {
+    const CONFIG = localStorage.getItem("colorToolConfig");
+    if (!configLoaded && CONFIG) {
+      loadConfig(CONFIG);
+    }
+  }, [configLoaded, loadConfig]);
+
+  /* !SECTION Load Config on page load */
+  /* =================================================================
+  /* SECTION Save config to local storage
+  ================================================================= */
+
+  const saveConfigToLocalStorage = useCallback((config: config) => {
+    if (configLoaded) {
+      localStorage.setItem("colorToolConfig", JSON.stringify(config, undefined, 4));
+    }
+  }, [configLoaded]);
+
+  useEffect(() => {
+    saveConfigToLocalStorage(config);
+  }, [config, saveConfigToLocalStorage]);
+
+  /* !SECTION Save config to local storage */
+  /* =================================================================
+  /* SECTION Library functions
+  ================================================================= */
+
+  function saveToLibrary(config: config) {
+    const newLibrary = [...library];
+    newLibrary.push(config);
+    setLibrary(newLibrary);
   }
+
+  function deleteFromLibrary(config: config) {
+    const newLibrary = [...library];
+    const index = newLibrary.indexOf(config);
+    newLibrary.splice(index, 1);
+    setLibrary(newLibrary);
+  }
+
+  /* !SECTION Library functions */
+  /* =================================================================
+  /* SECTION Save Library to local storage
+  ================================================================= */
+
+  const saveLibraryToLocalStorage = useCallback((library: config[]) => {
+    if (libraryLoaded) {
+      localStorage.setItem("colorToolLibrary", JSON.stringify(library, undefined, 4));
+    }
+  }, [libraryLoaded]);
+
+  useEffect(() => {
+    saveLibraryToLocalStorage(library);
+  }, [library, saveLibraryToLocalStorage]);
+
+  /* !SECTION Save Library to local storage */
+  /* =================================================================
+  /* SECTION Load library from local storage
+  ================================================================= */
+
+  const loadLibrary = useCallback((libraryString: string) => {
+    const localStore = JSON.parse(libraryString || "[]");
+    const library: config[] = [];
+    for (const key in localStore) {
+      library.push(localStore[key]);
+    }
+    setLibrary(library);
+    setLibraryLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (!libraryLoaded) {
+      loadLibrary(localStorage.getItem("colorToolLibrary") || "[]");
+    }
+  }, [libraryLoaded, loadLibrary]);
+
+  /* !SECTION Load library from local storage */
 
   const exposed = {
-    loaded,
+    providerLoaded,
+    configLoaded,
+    libraryLoaded,
     advColorInfo,
-    keyColor,
-    darkCount,
-    lightCount,
-    darkness,
-    darknessEasing,
-    lightness,
-    lightnessEasing,
-    darkRotation,
-    darkRotationEasing,
-    lightRotation,
-    lightRotationEasing,
-    darkSaturation,
-    darkSaturationEasing,
-    lightSaturation,
-    lightSaturationEasing,
-    load,
-    loadConfiguration,
+    config,
+    library,
     updateAdvColorInfo,
     updateKeyColor,
-    updateCount,
-    updateBrightness,
-    updateRotation,
-    updateSaturation,
-    updateEasing,
+    updateConfig,
+    updateConfigEasing,
+    loadConfig,
+    loadLibrary,
+    saveToLibrary,
+    deleteFromLibrary,
   };
 
   return <Context.Provider value={exposed}>{children}</Context.Provider>;

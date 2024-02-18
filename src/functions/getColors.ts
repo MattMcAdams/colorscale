@@ -1,5 +1,5 @@
 import Color from "color";
-import type { easingOptionsType } from "./ease";
+import type { easingOptions } from "../types/easing";
 import { ease } from "./ease";
 import * as hex from "./hex";
 
@@ -11,15 +11,15 @@ export const getColorsList = (
   // Hue rotation -360 to 360
   hueRotation: number,
   // Hue easing
-  hueEasing: easingOptionsType,
+  hueEasing: easingOptions,
   // Saturation 0 to 100
   saturation: number,
   // Saturation easing
-  satEasing: easingOptionsType,
+  satEasing: easingOptions,
   // Darkness / Lightness 0 to 100
   mixAmount: number,
   // Brightness easing
-  brightEasing: easingOptionsType,
+  brightEasing: easingOptions,
   // Root color
   mainColor: string,
   // Error color
@@ -54,3 +54,5 @@ export const getColorsList = (
 
   return colorsList;
 };
+
+export default getColorsList;

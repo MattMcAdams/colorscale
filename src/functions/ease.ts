@@ -22,35 +22,10 @@ import {
   easeInOutCirc,
 } from "js-easing-functions";
 
-export const easingOptions = [
-  'linear',
-  'easeInQuad',
-  'easeOutQuad',
-  'easeInOutQuad',
-  'easeInCubic',
-  'easeOutCubic',
-  'easeInOutCubic',
-  'easeInQuart',
-  'easeOutQuart',
-  'easeInOutQuart',
-  'easeInQuint',
-  'easeOutQuint',
-  'easeInOutQuint',
-  'easeInSine',
-  'easeOutSine',
-  'easeInOutSine',
-  'easeInExpo',
-  'easeOutExpo',
-  'easeInOutExpo',
-  'easeInCirc',
-  'easeOutCirc',
-  'easeInOutCirc',
-] as const;
-
-export type easingOptionsType = typeof easingOptions[number];
+import type { easingOptions } from "../types/easing";
 
 export function ease(
-  method: easingOptionsType,
+  method: easingOptions,
   step: number,
   end: number,
   steps: number
