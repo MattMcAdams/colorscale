@@ -28,9 +28,13 @@ const Provider: React.FC<Props> = ({ children }) => {
   ================================================================= */
 
   const providerLoaded = true;
-  const [configLoaded, setConfigLoaded] = useState<boolean>(defaults.configLoaded);
+  const [configLoaded, setConfigLoaded] = useState<boolean>(
+    defaults.configLoaded
+  );
   const [config, setConfig] = useState<config>({ ...defaults.config });
-  const [advColorInfo, setAdvColorInfo] = useState<boolean>(defaults.advColorInfo);
+  const [advColorInfo, setAdvColorInfo] = useState<boolean>(
+    defaults.advColorInfo
+  );
   const [library, setLibrary] = useState<config[]>([]);
   const [libraryLoaded, setLibraryLoaded] = useState<boolean>(false);
 
@@ -53,7 +57,7 @@ const Provider: React.FC<Props> = ({ children }) => {
       value = value.substring(0, 8);
     }
     setConfig({ ...config, keyColor: value });
-  };
+  }
 
   function updateConfig(
     key: "light" | "dark",
@@ -70,7 +74,7 @@ const Provider: React.FC<Props> = ({ children }) => {
     }
     newConfig[key][property] = sanitizedValue;
     setConfig(newConfig);
-  };
+  }
 
   function updateConfigEasing(
     key: "light" | "dark",
@@ -84,7 +88,7 @@ const Provider: React.FC<Props> = ({ children }) => {
     }
     newConfig[key][`${property}Ease`] = sanitizedValue;
     setConfig(newConfig);
-  };
+  }
 
   /* !SECTION Update configuration functions */
   /* =================================================================
@@ -160,7 +164,7 @@ const Provider: React.FC<Props> = ({ children }) => {
       newConfig.light.saturationEase = CONFIG.lightSaturationEasing;
     }
     setConfig(newConfig);
-  };
+  }
 
   const loadConfig = useCallback((configString: string) => {
     const CONFIG = JSON.parse(configString || "{}");
@@ -183,7 +187,7 @@ const Provider: React.FC<Props> = ({ children }) => {
         angleEase: defaults.config.light.angleEase,
         saturation: defaults.config.light.saturation,
         saturationEase: defaults.config.light.saturationEase,
-      }
+      },
     };
     if (
       CONFIG.darkCount ||
@@ -199,8 +203,8 @@ const Provider: React.FC<Props> = ({ children }) => {
       CONFIG.darkSaturation ||
       CONFIG.darkSaturationEasing ||
       CONFIG.lightSaturation ||
-      CONFIG.lightSaturationEasing)
-    {
+      CONFIG.lightSaturationEasing
+    ) {
       loadLegacyConfig(configString);
     } else {
       if (CONFIG.keyColor !== undefined) {
@@ -266,6 +270,8 @@ const Provider: React.FC<Props> = ({ children }) => {
     const CONFIG = localStorage.getItem("colorToolConfig");
     if (!configLoaded && CONFIG) {
       loadConfig(CONFIG);
+    } else if (!configLoaded && !CONFIG) {
+      setConfigLoaded(true);
     }
   }, [configLoaded, loadConfig]);
 
@@ -274,11 +280,17 @@ const Provider: React.FC<Props> = ({ children }) => {
   /* SECTION Save config to local storage
   ================================================================= */
 
-  const saveConfigToLocalStorage = useCallback((config: config) => {
-    if (configLoaded) {
-      localStorage.setItem("colorToolConfig", JSON.stringify(config, undefined, 4));
-    }
-  }, [configLoaded]);
+  const saveConfigToLocalStorage = useCallback(
+    (config: config) => {
+      if (configLoaded) {
+        localStorage.setItem(
+          "colorToolConfig",
+          JSON.stringify(config, undefined, 4)
+        );
+      }
+    },
+    [configLoaded]
+  );
 
   useEffect(() => {
     saveConfigToLocalStorage(config);
@@ -307,11 +319,17 @@ const Provider: React.FC<Props> = ({ children }) => {
   /* SECTION Save Library to local storage
   ================================================================= */
 
-  const saveLibraryToLocalStorage = useCallback((library: config[]) => {
-    if (libraryLoaded) {
-      localStorage.setItem("colorToolLibrary", JSON.stringify(library, undefined, 4));
-    }
-  }, [libraryLoaded]);
+  const saveLibraryToLocalStorage = useCallback(
+    (library: config[]) => {
+      if (libraryLoaded) {
+        localStorage.setItem(
+          "colorToolLibrary",
+          JSON.stringify(library, undefined, 4)
+        );
+      }
+    },
+    [libraryLoaded]
+  );
 
   useEffect(() => {
     saveLibraryToLocalStorage(library);

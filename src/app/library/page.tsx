@@ -9,8 +9,6 @@ import LibraryConfigInput from "../../components/inputs/LibraryConfiguration";
 const Library = () => {
   const Session = useSessionContext();
 
-  // const check = arr.some((e) => e.name === obj.name);
-
   return (
     <main className="space-y-16 lg:p-16 md:p-8 p-4">
       {Session.providerLoaded ? (
