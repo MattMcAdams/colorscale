@@ -1,9 +1,8 @@
 "use client";
-import ColorRow from "./ColorRow";
-import config from "../types/configObj";
-import { useSessionContext } from "../data/session";
+import ColorRow from "../ColorRow";
+import config from "../../types/config";
+import { useSessionContext } from "../../data/session";
 import { useRouter } from "next/navigation";
-import LibraryConfigInput from "./inputs/LibraryConfiguration";
 
 const LibraryRow = (props: { config: config, exists: boolean }) => {
   const Session = useSessionContext();

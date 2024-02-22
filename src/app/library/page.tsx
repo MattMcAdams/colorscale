@@ -3,7 +3,7 @@
 // load data
 import { useSessionContext } from "../../data/session";
 // load components
-import LibraryRow from "../../components/LibraryRow";
+import LibraryRow from "../../components/library/row";
 import LibraryConfigInput from "../../components/inputs/LibraryConfiguration";
 
 const Library = () => {
@@ -15,15 +15,12 @@ const Library = () => {
         Session.libraryLoaded && Session.configLoaded ? (
           <div className="md:flex gap-8 wrap space-y-8 md:space-y-0">
             <div className="basis-1/2 space-y-16 grow overflow-x-scroll">
-              <h1>Library</h1>
-              {!Session.library.some(
-                (config) =>
-                  JSON.stringify(config) === JSON.stringify(Session.config)
-              ) ? (
-                <LibraryRow config={Session.config} exists={false} />
-              ) : null}
-              {Session.library.map((config, index) => (
-                <LibraryRow config={config} key={index} exists={true} />
+              <div>
+                <h1 className="text-3xl font-bold">Library</h1>
+                <p>This is where you can organize and swap color palettes</p>
+              </div>
+              {Session.library.configs.map((config, key) => (
+                <LibraryRow config={config} key={key} exists={true} />
               ))}
             </div>
             <div>

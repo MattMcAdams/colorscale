@@ -1,5 +1,6 @@
 import { easingOptions } from "./easing";
-import type { config } from "./configObj";
+import type { config } from "./config";
+import type { library } from "./library";
 
 export type context = {
   providerLoaded: boolean;
@@ -25,7 +26,8 @@ export type context = {
     easing: easingOptions
   ) => void;
 
-  library: config[];
-  saveToLibrary: (config: config) => void;
+  library: library;
+  saveToLibrary: (config: config, name?: string, saveAs?: boolean) => void;
   deleteFromLibrary: (config: config) => void;
+  renameConfig: (config: config, name: string) => void;
 };

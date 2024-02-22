@@ -20,7 +20,7 @@ import CopySvgButton from "../components/inputs/CopySvgButton";
 import ConfigInput from "../components/inputs/Configuration";
 // load components
 import ColorRow from "../components/ColorRow";
-import { ConnectedScatterplot } from "../components/Graph";
+import { ConnectedScatterplot } from "../components/editor/Graph";
 
 export default function Home() {
   const Session = useSessionContext();
@@ -53,22 +53,42 @@ export default function Home() {
     '#FFFFFF'
   );
 
-  const allColors = [...darkColors, mainColor, ...lightColors]
+  const allColors = [...darkColors, mainColor, ...lightColors];
+
+  const saveAs = () => {
+    const name = prompt("What would you like to name this configuration?");
+    if (name) {
+      Session.saveToLibrary(Session.config, name, true);
+    }
+  };
+
+  const save = () => {
+    Session.saveToLibrary(Session.config);
+  }
 
   return (
     <main className="space-y-16 lg:p-16 md:p-8 p-4">
       {Session.providerLoaded ? (
         Session.configLoaded ? (
           <>
-            <div id="primaryControls" className="flex flex-wrap gap-x-8 gap-y-8">
-              <div className='space-y-7'>
+            <div
+              id="primaryControls"
+              className="flex flex-wrap gap-x-8 gap-y-8"
+            >
+              <div className="space-y-7">
                 <ColorInput />
-                <a
-                  href="/library"
-                  className="block text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 font-medium rounded-lg text-sm px-5 transform active:scale-90 transition-transform py-2.5"
-                >
-                  Library
-                </a>
+                <div className="flex gap-4">
+                  <a
+                    href="/library"
+                    className="grow block text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 font-medium rounded-lg text-sm px-5 transform active:scale-90 transition-transform py-2.5"
+                  >
+                    Library
+                  </a>
+                  {Session.config.id ? (
+                    <button className="block text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 font-medium rounded-lg text-sm px-5 transform active:scale-90 transition-transform py-2.5" onClick={save}>Save</button>
+                  ) : null}
+                  <button className="block text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 font-medium rounded-lg text-sm px-5 transform active:scale-90 transition-transform py-2.5" onClick={saveAs}>Save As</button>
+                </div>
               </div>
               <div className="space-y-4">
                 <p className="block font-mono font-bold text-base">Options</p>
@@ -112,7 +132,7 @@ export default function Home() {
             </div>
             <div
               id="colorScale"
-              className="sticky top-0 pt-8 pb-3 overflow-x-auto bg-white border-b border-gray-300"
+              className="sticky top-0 pt-8 pb-3 bg-white border-b border-gray-300"
             >
               <ColorRow config={Session.config} />
             </div>

@@ -1,5 +1,5 @@
 import type { easingOptions } from "../types/easing";
-import { config } from "../types/configObj";
+import { config } from "../types/config";
 
 export const defaultConfig: config = {
   keyColor: "0EA5E9",
@@ -24,7 +24,7 @@ export const defaultConfig: config = {
 };
 
 export const defaults= {
-  library: [],
+  library: {configs: [], groups: []},
   providerLoaded: false,
   configLoaded: false,
   libraryLoaded: false,

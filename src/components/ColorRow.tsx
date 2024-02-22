@@ -1,6 +1,6 @@
 import React from "react";
 import Swatch from "./Swatch";
-import config from "../types/configObj";
+import config from "../types/config";
 import { getColorsList } from "../functions/getColors";
 import * as hex from "../functions/hex";
 
@@ -34,14 +34,17 @@ export const ColorRow = (props: { config: config }) => {
   );
 
   return (
-    <div id="ColorRow" className="flex">
-      {darkColors.map((color: string, index: number) => (
-        <Swatch key={index} hex={color} />
-      ))}
-      <Swatch hex={mainColor} primary={true} />
-      {lightColors.map((color: string, index: number) => (
-        <Swatch key={index} hex={color} />
-      ))}
+    <div>
+      <p>{props.config.name || 'Untitled'}</p>
+      <div id="ColorRow" className="flex overflow-x-auto">
+        {darkColors.map((color: string, index: number) => (
+          <Swatch key={index} hex={color} />
+        ))}
+        <Swatch hex={mainColor} primary={true} />
+        {lightColors.map((color: string, index: number) => (
+          <Swatch key={index} hex={color} />
+        ))}
+      </div>
     </div>
   );
 };

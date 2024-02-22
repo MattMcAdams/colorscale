@@ -1,7 +1,9 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
+import { v4 as uuidv4 } from "uuid";
 import { easingOptions } from "../types/easing";
-import type { config } from "../types/configObj";
+import type { config } from "../types/config";
 import type { context } from "../types/context";
+import type { library } from "../types/library";
 
 import { defaults, nullProvider } from "./defaults";
 import { limits } from "./limits";
@@ -20,6 +22,7 @@ const Context = createContext<context>({
   saveToLibrary: nullProvider,
   deleteFromLibrary: nullProvider,
   loadLibrary: nullProvider,
+  renameConfig: nullProvider,
 });
 
 const Provider: React.FC<Props> = ({ children }) => {
@@ -35,7 +38,7 @@ const Provider: React.FC<Props> = ({ children }) => {
   const [advColorInfo, setAdvColorInfo] = useState<boolean>(
     defaults.advColorInfo
   );
-  const [library, setLibrary] = useState<config[]>([]);
+  const [library, setLibrary] = useState<library>({configs: [], groups: []});
   const [libraryLoaded, setLibraryLoaded] = useState<boolean>(false);
 
   /* !SECTION Stores */
@@ -169,6 +172,8 @@ const Provider: React.FC<Props> = ({ children }) => {
   const loadConfig = useCallback((configString: string) => {
     const CONFIG = JSON.parse(configString || "{}");
     const newConfig = {
+      id: CONFIG.id,
+      name: CONFIG.name,
       keyColor: defaults.config.keyColor,
       dark: {
         count: defaults.config.dark.count,
@@ -293,6 +298,7 @@ const Provider: React.FC<Props> = ({ children }) => {
   );
 
   useEffect(() => {
+    console.log('config', config);
     saveConfigToLocalStorage(config);
   }, [config, saveConfigToLocalStorage]);
 
@@ -301,17 +307,53 @@ const Provider: React.FC<Props> = ({ children }) => {
   /* SECTION Library functions
   ================================================================= */
 
-  function saveToLibrary(config: config) {
-    const newLibrary = [...library];
-    newLibrary.push(config);
-    setLibrary(newLibrary);
+  function saveToLibrary(config: config, name?: string, saveAs?: boolean) {
+    if (config.id && !saveAs) {
+      const newLibrary = { ...library };
+      const index = newLibrary.configs.findIndex((c) => c.id === config.id);
+      console.log('index', index);
+      if (index === -1) {
+        newLibrary.configs.push(config);
+      } else {
+        newLibrary.configs[index] = config;
+      }
+      setLibrary(newLibrary);
+    } else {
+      const newLibrary = { ...library };
+      const newConfig = { ...config };
+      newConfig.id = uuidv4();
+      newConfig.name = name || "Untitled";
+      newLibrary.configs.push(newConfig);
+      setLibrary(newLibrary);
+      setConfig(newConfig);
+    }
   }
 
-  function deleteFromLibrary(config: config) {
-    const newLibrary = [...library];
-    const index = newLibrary.indexOf(config);
-    newLibrary.splice(index, 1);
-    setLibrary(newLibrary);
+  function deleteFromLibrary(refConfig: config) {
+    if (refConfig.id === config.id) {
+      const newConfig = { ...config }
+      delete newConfig.id;
+      setConfig(newConfig);
+    }
+    if (refConfig.id) {
+      const newLibrary = { ...library };
+      const index = newLibrary.configs.indexOf(config);
+      newLibrary.configs.splice(index, 1);
+      setLibrary(newLibrary);
+    } else {
+      console.log('No ID found for config, delete operation not performed.');
+    }
+  }
+
+  function renameConfig(config: config, newName: string) {
+    if (config.id) {
+      const newLibrary = library;
+      const index = newLibrary.configs.indexOf(config);
+      newLibrary.configs[index].name = newName;
+      setLibrary(newLibrary);
+    } else {
+      console.log('No ID found for config, rename operation not performed.');
+    }
   }
 
   /* !SECTION Library functions */
@@ -320,7 +362,7 @@ const Provider: React.FC<Props> = ({ children }) => {
   ================================================================= */
 
   const saveLibraryToLocalStorage = useCallback(
-    (library: config[]) => {
+    (library: library) => {
       if (libraryLoaded) {
         localStorage.setItem(
           "colorToolLibrary",
@@ -341,10 +383,17 @@ const Provider: React.FC<Props> = ({ children }) => {
   ================================================================= */
 
   const loadLibrary = useCallback((libraryString: string) => {
-    const localStore = JSON.parse(libraryString || "[]");
-    const library: config[] = [];
-    for (const key in localStore) {
-      library.push(localStore[key]);
+    const localStore = JSON.parse(libraryString || "{configs: [], groups: []}");
+    const library: library = {configs: [], groups: []};
+    for (const key in localStore.configs) {
+      if (localStore.configs[key]) {
+        library.configs.push(localStore.configs[key]);
+      }
+    }
+    for (const key in localStore.groups) {
+      if (localStore.groups[key]) {
+        library.groups.push(localStore.groups[key]);
+      }
     }
     setLibrary(library);
     setLibraryLoaded(true);
@@ -373,6 +422,7 @@ const Provider: React.FC<Props> = ({ children }) => {
     loadLibrary,
     saveToLibrary,
     deleteFromLibrary,
+    renameConfig,
   };
 
   return <Context.Provider value={exposed}>{children}</Context.Provider>;

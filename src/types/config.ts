@@ -1,6 +1,8 @@
 import { easingOptions } from './easing';
 
 export type config = {
+  id?: string,
+  name?: string,
   keyColor: string,
   dark: {
     count: number,
