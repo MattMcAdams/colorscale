@@ -80,7 +80,7 @@ const Library = () => {
                                   <Button
                                     onClick={() =>
                                       Session.removeFromGroup(
-                                        config.id,
+                                        config.id as string,
                                         group.id
                                       )
                                     }
