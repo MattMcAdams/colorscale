@@ -48,12 +48,15 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 - Click a button to copy an SVG of all colors to be pasted into design software
 - Save palettes to the Library
 - Organize palettes into Groups
+- Reorder palettes within groups and in the library
 - Export and import library data via JSON files
 
 ## Roadmap
 
-- Reorder palettes within groups and in the library
 - Delete from all groups when deleted
 - Group for ungrouped colors
 - Confirmation dialog boxes for delete and edit when config hasn't been saved
 - Back to editor link
+- Improve responsive design
+- Improve error handling
+- Improve data validation

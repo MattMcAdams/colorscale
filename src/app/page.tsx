@@ -147,7 +147,7 @@ export default function Home() {
                     )}
                   </div>
                 </div>
-                <div className="space-y-4">
+                <div className="space-y-4 w-80">
                   <p className="block font-mono font-bold text-base">Options</p>
                   <AdvColorInfoInput />
                   <div className="flex gap-4">

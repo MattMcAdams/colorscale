@@ -6,7 +6,7 @@ const AdvColorInfoInput = () => {
   const Session = useSessionContext();
 
   return (
-    <div id={"AdvColorInfoInputField"} className="space-y-2 w-80">
+    <div id={"AdvColorInfoInputField"} className="space-y-2">
       <div className="flex items-center ps-4 border border-gray-300 rounded-lg">
         <input
           id="advColorInfoInput"

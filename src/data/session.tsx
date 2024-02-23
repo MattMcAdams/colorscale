@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { v4 as uuidv4 } from "uuid";
+import moveIndex from "../functions/moveIndex";
 import { easingOptions } from "../types/easing";
 import type { config } from "../types/config";
 import type { context } from "../types/context";
@@ -22,11 +23,13 @@ const Context = createContext<context>({
   updateConfigEasing: nullProvider,
   saveToLibrary: nullProvider,
   deleteFromLibrary: nullProvider,
+  shiftLibrary: nullProvider,
   loadLibrary: nullProvider,
   createGroup: nullProvider,
   addToGroup: nullProvider,
   removeFromGroup: nullProvider,
   deleteGroup: nullProvider,
+  shiftGroup: nullProvider,
 });
 
 const Provider: React.FC<Props> = ({ children }) => {
@@ -104,9 +107,9 @@ const Provider: React.FC<Props> = ({ children }) => {
     setConfig(newConfig);
   }
 
-  function updateConfigDirty() {
+  const updateConfigDirty = useCallback(() => {
     if (config.id) {
-      const libraryEntry = library.configs.find(x => x.id === config.id);
+      const libraryEntry = library.configs.find((x) => x.id === config.id);
       if (JSON.stringify(config) === JSON.stringify(libraryEntry)) {
         setConfigDirty(false);
       } else {
@@ -115,7 +118,7 @@ const Provider: React.FC<Props> = ({ children }) => {
     } else {
       setConfigDirty(true);
     }
-  }
+  }, [config, library.configs]);
 
   /* !SECTION Update configuration functions */
   /* =================================================================
@@ -286,10 +289,11 @@ const Provider: React.FC<Props> = ({ children }) => {
   );
 
   useEffect(() => {
-    console.log('config', config);
-    updateConfigDirty();
-    saveConfigToLocalStorage(config);
-  }, [config, saveConfigToLocalStorage]);
+    if (configLoaded) {
+      saveConfigToLocalStorage(config);
+      updateConfigDirty();
+    }
+  }, [config, configLoaded, saveConfigToLocalStorage, updateConfigDirty]);
 
   /* !SECTION Save config to local storage */
   /* =================================================================
@@ -331,8 +335,14 @@ const Provider: React.FC<Props> = ({ children }) => {
       // TODO: Loop through groups, deleting ID from matching groups
       setLibrary(newLibrary);
     } else {
-      console.log('No ID found for config, delete operation not performed.');
+      console.error('No ID found for config, delete operation not performed.');
     }
+  }
+
+  function shiftLibrary(oldIndex: number, newIndex: number) {
+    const newLibrary = { ...library };
+    moveIndex(newLibrary.configs, oldIndex, newIndex);
+    setLibrary(newLibrary);
   }
 
   /* !SECTION Library functions */
@@ -366,6 +376,16 @@ const Provider: React.FC<Props> = ({ children }) => {
     const newLibrary = { ...library };
     const groupIndex = newLibrary.groups.findIndex((group) => group.id === groupID);
     newLibrary.groups.splice(groupIndex, 1);
+    setLibrary(newLibrary);
+  }
+
+  const shiftGroup = (groupID: string, oldIndex: number, newIndex: number) => {
+    const newLibrary = { ...library };
+    newLibrary.groups.find((group) => {
+      if (group.id === groupID) {
+        moveIndex(group.configIDs, oldIndex, newIndex);
+      }
+    });
     setLibrary(newLibrary);
   }
 
@@ -441,6 +461,8 @@ const Provider: React.FC<Props> = ({ children }) => {
     addToGroup,
     removeFromGroup,
     deleteGroup,
+    shiftLibrary,
+    shiftGroup,
   };
 
   return <Context.Provider value={exposed}>{children}</Context.Provider>;

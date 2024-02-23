@@ -36,9 +36,9 @@ const Library = () => {
               </div>
               <div>
                 <div className="space-y-8">
-                  {Session.library.groups.map((group, key) => (
+                  {Session.library.groups.map((group, index) => (
                     <details
-                      key={key}
+                      key={group.id || index}
                       className="space-y-8 [&_svg]:open:-rotate-180"
                       open
                     >
@@ -63,37 +63,53 @@ const Library = () => {
                           Delete Group
                         </Button>
                       </summary>
-                      {group.configIDs.map((id, key) => {
+                      {group.configIDs.map((id, index) => {
                         const config = Session.library.configs.find(
                           (config) => config.id === id
                         );
                         if (config) {
                           return (
-                            <div key={key}>
+                            <div key={config.id}>
                               <p>{config.name}</p>
                               <ColorRow config={config} />
                               <div className="flex gap-4">
                                 <Button onClick={() => edit(config)}>
                                   Edit
                                 </Button>
-                                {group.id ? (
+                                {index > 0 ? (
                                   <Button
                                     onClick={() =>
-                                      Session.removeFromGroup(
-                                        config.id as string,
-                                        group.id
-                                      )
+                                      Session.shiftGroup(group.id, index, index - 1)
                                     }
                                   >
-                                    Remove From Group
+                                    Move Up
                                   </Button>
                                 ) : null}
+                                {index + 1 < group.configIDs.length ? (
+                                  <Button
+                                    onClick={() =>
+                                      Session.shiftGroup(group.id, index, index + 1)
+                                    }
+                                  >
+                                    Move Down
+                                  </Button>
+                                ) : null}
+                                <Button
+                                  onClick={() =>
+                                    Session.removeFromGroup(
+                                      config.id as string,
+                                      group.id
+                                    )
+                                  }
+                                >
+                                  Remove From Group
+                                </Button>
                               </div>
                             </div>
                           );
                         } else {
                           return (
-                            <div key={key}>
+                            <div key={index}>
                               <p>Config not found</p>
                               <Button
                                 onClick={() =>
@@ -112,13 +128,27 @@ const Library = () => {
               </div>
               <div className="space-y-8">
                 <h2 className="text-2xl font-bold">All Saved Palettes</h2>
-                {Session.library.configs.map((config, key) => (
-                  <div key={key}>
+                {Session.library.configs.map((config, index) => (
+                  <div key={config.id || index}>
                     <p>{config.name}</p>
                     <ColorRow config={config} />
                     <div className="flex gap-4">
                       <Button onClick={() => edit(config)}>Edit</Button>
                       <AddToGroup config={config} />
+                      {index > 0 ? (
+                        <Button
+                          onClick={() => Session.shiftLibrary(index, index - 1)}
+                        >
+                          Move Up
+                        </Button>
+                      ) : null}
+                      {index + 1 < Session.library.configs.length ? (
+                        <Button
+                          onClick={() => Session.shiftLibrary(index, index + 1)}
+                        >
+                          Move Down
+                        </Button>
+                      ) : null}
                       <Button onClick={() => Session.deleteFromLibrary(config)}>
                         Delete
                       </Button>
