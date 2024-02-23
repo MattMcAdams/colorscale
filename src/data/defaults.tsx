@@ -29,6 +29,7 @@ export const defaults= {
   configLoaded: false,
   libraryLoaded: false,
   advColorInfo: false,
+  configDirty: true,
   config: defaultConfig,
 };
 

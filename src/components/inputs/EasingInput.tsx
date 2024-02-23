@@ -2,6 +2,7 @@
 
 import { ChangeEvent } from "react";
 import { easingOptions } from "../../types/easing";
+import Label from "./Label";
 
 const EasingInput = (props: {
   name: string;
@@ -21,12 +22,7 @@ const EasingInput = (props: {
       id={props.name + "InputField"}
       className="space-y-2"
     >
-      <label
-        htmlFor={props.name + "Input"}
-        className="block mb-2 text-sm font-medium text-gray-900 font-mono hidden"
-      >
-        {props.label}
-      </label>
+      <Label htmlFor={props.name + "Input"}>{props.label}</Label>
       <select
         name="cars"
         id={props.name + "Input"}

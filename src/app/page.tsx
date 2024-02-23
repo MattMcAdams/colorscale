@@ -2,28 +2,36 @@
 
 // Load dependencies
 import Color from 'color';
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 // load types
 import easingOptions from "../types/easing";
 // load functions
 import * as hex from "../functions/hex";
 import getColorsList from "../functions/getColors";
+import getSvg from "../functions/getSvg";
 // load data
 import { useSessionContext } from "../data/session";
 import limits from "../data/limits";
 // load inputs
+import Button from "../components/inputs/Button";
 import NumberInput from "../components/inputs/NumberInput";
 import EasingInput from "../components/inputs/EasingInput";
+import TextInput from "../components/inputs/TextInput";
 import ColorInput from "../components/inputs/KeyColorInput";
 import AdvColorInfoInput from "../components/inputs/AdvColorInfoInput";
-import CopyColorsButton from "../components/inputs/CopyColorsButton";
-import CopySvgButton from "../components/inputs/CopySvgButton";
-import ConfigInput from "../components/inputs/Configuration";
+
 // load components
 import ColorRow from "../components/ColorRow";
-import { ConnectedScatterplot } from "../components/editor/Graph";
+import { ConnectedScatterplot } from "../components/Graph";
 
 export default function Home() {
   const Session = useSessionContext();
+  const router = useRouter();
+
+  const [configString, setConfigString] = useState(
+    typeof localStorage !== 'undefined' ? localStorage.getItem("colorToolConfig") || "" : ""
+  );
 
   const mainColor = hex.isValid(hex.fromNumber(Session.config.keyColor)) ? hex.fromNumber(Session.config.keyColor) : "#000000";
 
@@ -55,15 +63,27 @@ export default function Home() {
 
   const allColors = [...darkColors, mainColor, ...lightColors];
 
-  const saveAs = () => {
+  function saveAs() {
     const name = prompt("What would you like to name this configuration?");
     if (name) {
       Session.saveToLibrary(Session.config, name, true);
     }
   };
 
-  const save = () => {
+  function save() {
     Session.saveToLibrary(Session.config);
+  }
+
+  function applyConfig() {
+    Session.loadConfig(configString);
+  }
+
+  function loadConfig() {
+    setConfigString(localStorage.getItem("colorToolConfig") || "");
+  }
+
+  function copyToClipboard(content: string) {
+    navigator.clipboard.writeText(content);
   }
 
   return (
@@ -71,38 +91,10 @@ export default function Home() {
       {Session.providerLoaded ? (
         Session.configLoaded ? (
           <>
-            <div
-              id="primaryControls"
-              className="flex flex-wrap gap-x-8 gap-y-8"
-            >
-              <div className="space-y-7">
-                <ColorInput />
-                <div className="flex gap-4">
-                  <a
-                    href="/library"
-                    className="grow block text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 font-medium rounded-lg text-sm px-5 transform active:scale-90 transition-transform py-2.5"
-                  >
-                    Library
-                  </a>
-                  {Session.config.id ? (
-                    <button className="block text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 font-medium rounded-lg text-sm px-5 transform active:scale-90 transition-transform py-2.5" onClick={save}>Save</button>
-                  ) : null}
-                  <button className="block text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 font-medium rounded-lg text-sm px-5 transform active:scale-90 transition-transform py-2.5" onClick={saveAs}>Save As</button>
-                </div>
-              </div>
-              <div className="space-y-4">
-                <p className="block font-mono font-bold text-base">Options</p>
-                <AdvColorInfoInput />
-                <div className="flex gap-x-4">
-                  <CopyColorsButton colors={allColors} />
-                  <CopySvgButton colors={allColors} />
-                </div>
-              </div>
+            <div id="primaryControls" className="flex flex-wrap gap-8">
               <div>
-                <span className="block font-mono font-bold text-base">
-                  About
-                </span>
-                <p className="mt-4">Colorful v2.0.0</p>
+                <ColorInput />
+                <p className="mt-2">Colorful v2.0.0</p>
                 <p>
                   <a
                     href="https://www.mattmcadams.com"
@@ -128,6 +120,51 @@ export default function Home() {
                     Donate
                   </a>
                 </p>
+              </div>
+              <div className="flex flex-wrap gap-8">
+                <div className="space-y-4 w-80">
+                  <p className="block font-mono font-bold text-base">Manage</p>
+                  <Button
+                    onClick={() => router.push("/library")}
+                    className="w-full mt-4"
+                  >
+                    Library
+                  </Button>
+                  <div className="flex gap-4">
+                    {Session.configDirty && Session.config.id ? (
+                      <>
+                        <Button onClick={save} className="basis-1/2">
+                          Save
+                        </Button>
+                        <Button onClick={saveAs} className="basis-1/2">
+                          Save As
+                        </Button>
+                      </>
+                    ) : (
+                      <Button onClick={saveAs} className="grow">
+                        Save As
+                      </Button>
+                    )}
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <p className="block font-mono font-bold text-base">Options</p>
+                  <AdvColorInfoInput />
+                  <div className="flex gap-4">
+                    <Button
+                      className="basis-1/2"
+                      onClick={() => copyToClipboard(allColors.join(", "))}
+                    >
+                      Copy Colors
+                    </Button>
+                    <Button
+                      className="basis-1/2"
+                      onClick={() => copyToClipboard(getSvg(allColors))}
+                    >
+                      Copy SVG
+                    </Button>
+                  </div>
+                </div>
               </div>
             </div>
             <div
@@ -392,8 +429,31 @@ export default function Home() {
                   />
                 </figure>
               </div>
-              <div>
-                <ConfigInput />
+              <div className="space-y-12 w-80">
+                <TextInput
+                  name="name"
+                  label="Name"
+                  value={Session.config.name ? Session.config.name : ""}
+                  changeHandler={(e) => Session.updateName(e.target.value)}
+                />
+                <div className="space-y-2">
+                  <TextInput
+                    area={true}
+                    name="config"
+                    label="Configuration"
+                    value={configString}
+                    changeHandler={(e) => setConfigString(e.target.value)}
+                    className="w-full"
+                  />
+                  <div className="flex space-x-2">
+                    <Button onClick={applyConfig} className="grow">
+                      Apply Config
+                    </Button>
+                    <Button onClick={loadConfig} className="grow">
+                      Get Current
+                    </Button>
+                  </div>
+                </div>
               </div>
             </div>
           </>

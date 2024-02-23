@@ -14,7 +14,9 @@ export type context = {
   updateAdvColorInfo: (value: boolean) => void;
 
   config: config;
+  configDirty: boolean;
   updateKeyColor: (hex: string) => void;
+  updateName: (newName: string) => void;
   updateConfig: (
     key: 'light' | 'dark',
     property: 'brightness' | 'saturation' | 'angle' | 'count',
@@ -29,5 +31,4 @@ export type context = {
   library: library;
   saveToLibrary: (config: config, name?: string, saveAs?: boolean) => void;
   deleteFromLibrary: (config: config) => void;
-  renameConfig: (config: config, name: string) => void;
 };

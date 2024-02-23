@@ -1,6 +1,7 @@
 "use client";
 
 import { ChangeEvent } from "react";
+import Label from "./Label";
 
 const NumberInput = (props: {
   name: string;
@@ -13,12 +14,7 @@ const NumberInput = (props: {
 }) => {
   return (
     <div id={props.name + "InputField"} className="space-y-2">
-      <label
-        htmlFor={props.name + "Input"}
-        className="block mb-2 text-sm font-bold text-gray-900 font-mono"
-      >
-        {props.label}
-      </label>
+      <Label htmlFor={props.name + "Input"}>{props.label}</Label>
       <input
         className="rounded-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5"
         type="number"

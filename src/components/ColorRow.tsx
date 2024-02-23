@@ -35,7 +35,6 @@ export const ColorRow = (props: { config: config }) => {
 
   return (
     <div>
-      <p>{props.config.name || 'Untitled'}</p>
       <div id="ColorRow" className="flex overflow-x-auto">
         {darkColors.map((color: string, index: number) => (
           <Swatch key={index} hex={color} />

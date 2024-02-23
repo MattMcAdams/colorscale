@@ -1,6 +1,7 @@
 export type group = {
+  id: string,
   name: string,
-  ids: string[]
+  configIDs: string[]
 }
 
 export default group;

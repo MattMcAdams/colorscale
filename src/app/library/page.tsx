@@ -4,7 +4,7 @@
 import { useSessionContext } from "../../data/session";
 // load components
 import LibraryRow from "../../components/library/row";
-import LibraryConfigInput from "../../components/inputs/LibraryConfiguration";
+import LibraryConfigInput from "../../components/library/LibraryConfiguration";
 
 const Library = () => {
   const Session = useSessionContext();

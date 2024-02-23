@@ -17,12 +17,12 @@ const Context = createContext<context>({
   loadConfig: nullProvider,
   updateAdvColorInfo: nullProvider,
   updateKeyColor: nullProvider,
+  updateName: nullProvider,
   updateConfig: nullProvider,
   updateConfigEasing: nullProvider,
   saveToLibrary: nullProvider,
   deleteFromLibrary: nullProvider,
   loadLibrary: nullProvider,
-  renameConfig: nullProvider,
 });
 
 const Provider: React.FC<Props> = ({ children }) => {
@@ -35,6 +35,7 @@ const Provider: React.FC<Props> = ({ children }) => {
     defaults.configLoaded
   );
   const [config, setConfig] = useState<config>({ ...defaults.config });
+  const [configDirty, setConfigDirty] = useState<boolean>(defaults.configDirty);
   const [advColorInfo, setAdvColorInfo] = useState<boolean>(
     defaults.advColorInfo
   );
@@ -93,6 +94,25 @@ const Provider: React.FC<Props> = ({ children }) => {
     setConfig(newConfig);
   }
 
+  function updateName(newName: string) {
+    const newConfig = { ...config };
+    newConfig.name = newName;
+    setConfig(newConfig);
+  }
+
+  function updateConfigDirty() {
+    if (config.id) {
+      const libraryEntry = library.configs.find(x => x.id === config.id);
+      if (JSON.stringify(config) === JSON.stringify(libraryEntry)) {
+        setConfigDirty(false);
+      } else {
+        setConfigDirty(true);
+      }
+    } else {
+      setConfigDirty(true);
+    }
+  }
+
   /* !SECTION Update configuration functions */
   /* =================================================================
   /* SECTION Load configuration functions
@@ -100,27 +120,7 @@ const Provider: React.FC<Props> = ({ children }) => {
 
   function loadLegacyConfig(configString: string) {
     const CONFIG = JSON.parse(configString || "{}");
-    const newConfig = {
-      keyColor: defaults.config.keyColor,
-      dark: {
-        count: defaults.config.dark.count,
-        brightness: defaults.config.dark.brightness,
-        brightnessEase: defaults.config.dark.brightnessEase,
-        angle: defaults.config.dark.angle,
-        angleEase: defaults.config.dark.angleEase,
-        saturation: defaults.config.dark.saturation,
-        saturationEase: defaults.config.dark.saturationEase,
-      },
-      light: {
-        count: defaults.config.light.count,
-        brightness: defaults.config.light.brightness,
-        brightnessEase: defaults.config.light.brightnessEase,
-        angle: defaults.config.light.angle,
-        angleEase: defaults.config.light.angleEase,
-        saturation: defaults.config.light.saturation,
-        saturationEase: defaults.config.light.saturationEase,
-      },
-    };
+    const newConfig = JSON.parse(JSON.stringify(defaults.config));
     if (CONFIG.keyColor !== undefined) {
       newConfig.keyColor = CONFIG.keyColor;
     }
@@ -171,29 +171,7 @@ const Provider: React.FC<Props> = ({ children }) => {
 
   const loadConfig = useCallback((configString: string) => {
     const CONFIG = JSON.parse(configString || "{}");
-    const newConfig = {
-      id: CONFIG.id,
-      name: CONFIG.name,
-      keyColor: defaults.config.keyColor,
-      dark: {
-        count: defaults.config.dark.count,
-        brightness: defaults.config.dark.brightness,
-        brightnessEase: defaults.config.dark.brightnessEase,
-        angle: defaults.config.dark.angle,
-        angleEase: defaults.config.dark.angleEase,
-        saturation: defaults.config.dark.saturation,
-        saturationEase: defaults.config.dark.saturationEase,
-      },
-      light: {
-        count: defaults.config.light.count,
-        brightness: defaults.config.light.brightness,
-        brightnessEase: defaults.config.light.brightnessEase,
-        angle: defaults.config.light.angle,
-        angleEase: defaults.config.light.angleEase,
-        saturation: defaults.config.light.saturation,
-        saturationEase: defaults.config.light.saturationEase,
-      },
-    };
+    const newConfig = JSON.parse(JSON.stringify(defaults.config));
     if (
       CONFIG.darkCount ||
       CONFIG.lightCount ||
@@ -214,6 +192,12 @@ const Provider: React.FC<Props> = ({ children }) => {
     } else {
       if (CONFIG.keyColor !== undefined) {
         newConfig.keyColor = CONFIG.keyColor;
+      }
+      if (CONFIG.id !== undefined) {
+        newConfig.id = CONFIG.id;
+      }
+      if (CONFIG.name !== undefined) {
+        newConfig.name = CONFIG.name;
       }
       if (CONFIG.dark !== undefined) {
         if (CONFIG.dark.count !== undefined) {
@@ -299,6 +283,7 @@ const Provider: React.FC<Props> = ({ children }) => {
 
   useEffect(() => {
     console.log('config', config);
+    updateConfigDirty();
     saveConfigToLocalStorage(config);
   }, [config, saveConfigToLocalStorage]);
 
@@ -308,24 +293,24 @@ const Provider: React.FC<Props> = ({ children }) => {
   ================================================================= */
 
   function saveToLibrary(config: config, name?: string, saveAs?: boolean) {
+    const newConfig = JSON.parse(JSON.stringify(config));
     if (config.id && !saveAs) {
       const newLibrary = { ...library };
       const index = newLibrary.configs.findIndex((c) => c.id === config.id);
-      console.log('index', index);
       if (index === -1) {
-        newLibrary.configs.push(config);
+        newLibrary.configs.push(newConfig);
       } else {
-        newLibrary.configs[index] = config;
+        newLibrary.configs[index] = newConfig;
       }
       setLibrary(newLibrary);
+      updateConfigDirty();
     } else {
       const newLibrary = { ...library };
-      const newConfig = { ...config };
       newConfig.id = uuidv4();
       newConfig.name = name || "Untitled";
       newLibrary.configs.push(newConfig);
       setLibrary(newLibrary);
-      setConfig(newConfig);
+      setConfig(JSON.parse(JSON.stringify(newConfig)));
     }
   }
 
@@ -337,22 +322,12 @@ const Provider: React.FC<Props> = ({ children }) => {
     }
     if (refConfig.id) {
       const newLibrary = { ...library };
-      const index = newLibrary.configs.indexOf(config);
+      const index = newLibrary.configs.indexOf(refConfig);
       newLibrary.configs.splice(index, 1);
+      // TODO: Loop through groups, deleting ID from matching groups
       setLibrary(newLibrary);
     } else {
       console.log('No ID found for config, delete operation not performed.');
-    }
-  }
-
-  function renameConfig(config: config, newName: string) {
-    if (config.id) {
-      const newLibrary = library;
-      const index = newLibrary.configs.indexOf(config);
-      newLibrary.configs[index].name = newName;
-      setLibrary(newLibrary);
-    } else {
-      console.log('No ID found for config, rename operation not performed.');
     }
   }
 
@@ -411,18 +386,19 @@ const Provider: React.FC<Props> = ({ children }) => {
     providerLoaded,
     configLoaded,
     libraryLoaded,
+    configDirty,
     advColorInfo,
     config,
     library,
     updateAdvColorInfo,
     updateKeyColor,
+    updateName,
     updateConfig,
     updateConfigEasing,
     loadConfig,
     loadLibrary,
     saveToLibrary,
-    deleteFromLibrary,
-    renameConfig,
+    deleteFromLibrary
   };
 
   return <Context.Provider value={exposed}>{children}</Context.Provider>;
