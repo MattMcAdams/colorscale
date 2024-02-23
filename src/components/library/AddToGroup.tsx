@@ -44,6 +44,11 @@ export const AddToGroup = (props: { config: config }) => {
     }
   }
 
+  function save() {
+    Session.addToGroup(props.config.id ? props.config.id : "", selectedGroup);
+    closeModal();
+  }
+
   return (
     <>
       <Modal isOpen={isModalOpen} onClose={closeModal}>
@@ -78,36 +83,38 @@ export const AddToGroup = (props: { config: config }) => {
             </button>
           </div>
           {/* <!-- Modal body --> */}
-          <Label htmlFor="GroupInput">Group</Label>
-          <select
-            name="Group"
-            id="GroupInput"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-            value={selectedGroup}
-            onChange={groupChangeHandler}
-          >
-            {Session.library.groups.map((group, key) => (
-              <option key={key} value={group.id}>
-                {group.name}
-              </option>
-            ))}
-          </select>
-          <div className="flex">
-            <TextInput
-              name="NewGroup"
-              label="Create new group"
-              value={newGroupName}
-              changeHandler={(e) => setNewGroupName(e.target.value)}
-            />
-            <Button onClick={createGroup}>Create</Button>
+          <div className="p-4 space-y-8">
+            <div>
+              <Label htmlFor="GroupInput">Group</Label>
+              <select
+                name="Group"
+                id="GroupInput"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                value={selectedGroup}
+                onChange={groupChangeHandler}
+              >
+                {Session.library.groups.map((group, key) => (
+                  <option key={key} value={group.id}>
+                    {group.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <TextInput
+                name="NewGroup"
+                label="Create new group"
+                value={newGroupName}
+                changeHandler={(e) => setNewGroupName(e.target.value)}
+                button={<Button onClick={createGroup} className="rounded-s-none">Create</Button>}
+              />
+            </div>
+            {selectedGroup !== "" ? (
+              <Button onClick={save}>
+                Save
+              </Button>
+            ) : null}
           </div>
-          {selectedGroup !== "" ? (
-            <Button
-              onClick={() => Session.addToGroup(props.config.id ? props.config.id : '', selectedGroup)}
-            >
-              Save
-            </Button>
-          ) : null}
         </div>
       </Modal>
       <Button onClick={openModal}>Add to Group</Button>

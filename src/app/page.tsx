@@ -94,7 +94,7 @@ export default function Home() {
             <div id="primaryControls" className="flex flex-wrap gap-8">
               <div>
                 <ColorInput />
-                <p className="mt-2">Colorful v2.0.0</p>
+                <p className="mt-2">Colorful v2.1.0</p>
                 <p>
                   <a
                     href="https://www.mattmcadams.com"

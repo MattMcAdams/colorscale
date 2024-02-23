@@ -11,6 +11,7 @@ import ColorRow from "../../components/ColorRow";
 import Button from "../../components/inputs/Button";
 import { AddToGroup } from "../../components/library/AddToGroup";
 import AdvColorInfoInput from "../../components/inputs/AdvColorInfoInput";
+import { LibraryConfig } from "@/components/library/LibraryConfig";
 
 const Library = () => {
   const Session = useSessionContext();
@@ -31,61 +32,81 @@ const Library = () => {
                 <h1 className="text-3xl font-bold">Library</h1>
                 <p>This is where you can organize and swap color palettes</p>
                 <AdvColorInfoInput />
+                <LibraryConfig />
               </div>
               <div>
                 <div className="space-y-8">
                   {Session.library.groups.map((group, key) => (
-                    <div key={key} className="space-y-8">
-                      <div className="flex justify-between gap-8">
-                        <h2 className="text-2xl font-bold">{group.name}</h2>
+                    <details
+                      key={key}
+                      className="space-y-8 [&_svg]:open:-rotate-180"
+                      open
+                    >
+                      <summary className="flex cursor-pointer list-none items-center gap-4 justify-between">
+                        <div className="flex gap-4 items-center">
+                          <svg
+                            className="rotate-0 transform text-blue-700 transition-all duration-300"
+                            fill="none"
+                            height="20"
+                            width="20"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="4"
+                            viewBox="0 0 24 24"
+                          >
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                          </svg>
+                          <h2 className="text-2xl font-bold">{group.name}</h2>
+                        </div>
                         <Button onClick={() => Session.deleteGroup(group.id)}>
                           Delete Group
                         </Button>
-                      </div>
-                        {group.configIDs.map((id, key) => {
-                          const config = Session.library.configs.find(
-                            (config) => config.id === id
-                          );
-                          if (config) {
-                            return (
-                              <div key={key}>
-                                <p>{config.name}</p>
-                                <ColorRow config={config} />
-                                <div className="flex gap-4">
-                                  <Button onClick={() => edit(config)}>
-                                    Edit
-                                  </Button>
-                                  {group.id ? (
-                                    <Button
-                                      onClick={() =>
-                                        Session.removeFromGroup(
-                                          config.id,
-                                          group.id
-                                        )
-                                      }
-                                    >
-                                      Remove From Group
-                                    </Button>
-                                  ) : null}
-                                </div>
-                              </div>
-                            );
-                          } else {
-                            return (
-                              <div key={key}>
-                                <p>Config not found</p>
-                                <Button
-                                  onClick={() =>
-                                    Session.removeFromGroup(id, group.id)
-                                  }
-                                >
-                                  Remove From Group
+                      </summary>
+                      {group.configIDs.map((id, key) => {
+                        const config = Session.library.configs.find(
+                          (config) => config.id === id
+                        );
+                        if (config) {
+                          return (
+                            <div key={key}>
+                              <p>{config.name}</p>
+                              <ColorRow config={config} />
+                              <div className="flex gap-4">
+                                <Button onClick={() => edit(config)}>
+                                  Edit
                                 </Button>
+                                {group.id ? (
+                                  <Button
+                                    onClick={() =>
+                                      Session.removeFromGroup(
+                                        config.id,
+                                        group.id
+                                      )
+                                    }
+                                  >
+                                    Remove From Group
+                                  </Button>
+                                ) : null}
                               </div>
-                            );
-                          }
-                        })}
-                    </div>
+                            </div>
+                          );
+                        } else {
+                          return (
+                            <div key={key}>
+                              <p>Config not found</p>
+                              <Button
+                                onClick={() =>
+                                  Session.removeFromGroup(id, group.id)
+                                }
+                              >
+                                Remove From Group
+                              </Button>
+                            </div>
+                          );
+                        }
+                      })}
+                    </details>
                   ))}
                 </div>
               </div>
@@ -97,10 +118,10 @@ const Library = () => {
                     <ColorRow config={config} />
                     <div className="flex gap-4">
                       <Button onClick={() => edit(config)}>Edit</Button>
+                      <AddToGroup config={config} />
                       <Button onClick={() => Session.deleteFromLibrary(config)}>
                         Delete
                       </Button>
-                      <AddToGroup config={config} />
                     </div>
                   </div>
                 ))}
