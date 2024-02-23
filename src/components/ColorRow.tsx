@@ -34,16 +34,14 @@ export const ColorRow = (props: { config: config }) => {
   );
 
   return (
-    <div>
-      <div id="ColorRow" className="flex overflow-x-auto">
-        {darkColors.map((color: string, index: number) => (
-          <Swatch key={index} hex={color} />
-        ))}
-        <Swatch hex={mainColor} primary={true} />
-        {lightColors.map((color: string, index: number) => (
-          <Swatch key={index} hex={color} />
-        ))}
-      </div>
+    <div id="ColorRow" className="flex overflow-x-auto">
+      {darkColors.map((color: string, index: number) => (
+        <Swatch key={index} hex={color} />
+      ))}
+      <Swatch hex={mainColor} primary={true} />
+      {lightColors.map((color: string, index: number) => (
+        <Swatch key={index} hex={color} />
+      ))}
     </div>
   );
 };

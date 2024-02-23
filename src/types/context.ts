@@ -31,4 +31,8 @@ export type context = {
   library: library;
   saveToLibrary: (config: config, name?: string, saveAs?: boolean) => void;
   deleteFromLibrary: (config: config) => void;
+  createGroup: (name: string) => void;
+  addToGroup: (configID: string, groupID: string) => void;
+  removeFromGroup: (configID: string, groupID: string) => void;
+  deleteGroup: (groupID: string) => void;
 };

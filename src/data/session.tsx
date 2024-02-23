@@ -23,6 +23,10 @@ const Context = createContext<context>({
   saveToLibrary: nullProvider,
   deleteFromLibrary: nullProvider,
   loadLibrary: nullProvider,
+  createGroup: nullProvider,
+  addToGroup: nullProvider,
+  removeFromGroup: nullProvider,
+  deleteGroup: nullProvider,
 });
 
 const Provider: React.FC<Props> = ({ children }) => {
@@ -333,6 +337,40 @@ const Provider: React.FC<Props> = ({ children }) => {
 
   /* !SECTION Library functions */
   /* =================================================================
+  /* SECTION Group functions
+  ================================================================= */
+
+  const createGroup = (name: string) => {
+    const newLibrary = { ...library };
+    const newGroup = { id: uuidv4(), name, configIDs: [] };
+    newLibrary.groups.push(newGroup);
+    setLibrary(newLibrary);
+  }
+
+  const addToGroup = (configID: string, groupID: string) => {
+    const newLibrary = { ...library };
+    const groupIndex = newLibrary.groups.findIndex((group) => group.id === groupID);
+    newLibrary.groups[groupIndex].configIDs.push(configID);
+    setLibrary(newLibrary);
+  }
+
+  const removeFromGroup = (configID: string, groupID: string) => {
+    const newLibrary = { ...library };
+    const groupIndex = newLibrary.groups.findIndex((group) => group.id === groupID);
+    const configIndex = newLibrary.groups[groupIndex].configIDs.indexOf(configID);
+    newLibrary.groups[groupIndex].configIDs.splice(configIndex, 1);
+    setLibrary(newLibrary);
+  }
+
+  const deleteGroup = (groupID: string) => {
+    const newLibrary = { ...library };
+    const groupIndex = newLibrary.groups.findIndex((group) => group.id === groupID);
+    newLibrary.groups.splice(groupIndex, 1);
+    setLibrary(newLibrary);
+  }
+
+  /* !SECTION Group functions */
+  /* =================================================================
   /* SECTION Save Library to local storage
   ================================================================= */
 
@@ -398,7 +436,11 @@ const Provider: React.FC<Props> = ({ children }) => {
     loadConfig,
     loadLibrary,
     saveToLibrary,
-    deleteFromLibrary
+    deleteFromLibrary,
+    createGroup,
+    addToGroup,
+    removeFromGroup,
+    deleteGroup,
   };
 
   return <Context.Provider value={exposed}>{children}</Context.Provider>;
