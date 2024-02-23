@@ -7,14 +7,14 @@ const AdvColorInfoInput = () => {
 
   return (
     <div id={"AdvColorInfoInputField"} className="space-y-2">
-      <div className="flex items-center ps-4 border border-gray-300 rounded-lg">
+      <div className="flex items-center ps-4 pe-4 border border-gray-300 rounded-lg">
         <input
           id="advColorInfoInput"
           type="checkbox"
           checked={Session.advColorInfo}
           name="adv-color-info"
           onChange={(e) => Session.updateAdvColorInfo(e.target.checked)}
-          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded"
+          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-lg"
         />
         <label
           htmlFor="advColorInfoInput"

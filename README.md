@@ -56,7 +56,5 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 - Delete from all groups when deleted
 - Group for ungrouped colors
 - Confirmation dialog boxes for delete and edit when config hasn't been saved
-- Back to editor link
-- Improve responsive design
 - Improve error handling
 - Improve data validation

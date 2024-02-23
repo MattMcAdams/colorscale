@@ -2,6 +2,7 @@
 
 // import dependencies
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 // import types
 import type config from "../../types/config";
 // load data
@@ -25,10 +26,19 @@ const Library = () => {
   return (
     <>
       <main className="space-y-16 lg:p-16 md:p-8 p-4">
+        <nav>
+          <Link href="/" className="hover:underline">
+            Editor
+          </Link>{" "}
+          &middot; <span>Library</span> &middot;{" "}
+          <Link href="/about" className="hover:underline">
+            About
+          </Link>
+        </nav>
         {Session.providerLoaded ? (
           Session.libraryLoaded && Session.configLoaded ? (
-            <div className="space-y-16 grow overflow-x-scroll">
-              <div className="space-y-4">
+            <div className="space-y-16 grow">
+              <div className="space-y-4 max-w-3xl">
                 <h1 className="text-3xl font-bold">Library</h1>
                 <p>This is where you can organize and swap color palettes</p>
                 <AdvColorInfoInput />
@@ -79,7 +89,11 @@ const Library = () => {
                                 {index > 0 ? (
                                   <Button
                                     onClick={() =>
-                                      Session.shiftGroup(group.id, index, index - 1)
+                                      Session.shiftGroup(
+                                        group.id,
+                                        index,
+                                        index - 1
+                                      )
                                     }
                                   >
                                     Move Up
@@ -88,7 +102,11 @@ const Library = () => {
                                 {index + 1 < group.configIDs.length ? (
                                   <Button
                                     onClick={() =>
-                                      Session.shiftGroup(group.id, index, index + 1)
+                                      Session.shiftGroup(
+                                        group.id,
+                                        index,
+                                        index + 1
+                                      )
                                     }
                                   >
                                     Move Down

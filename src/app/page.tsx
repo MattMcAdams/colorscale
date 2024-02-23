@@ -4,6 +4,7 @@
 import Color from 'color';
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Link from "next/link";
 // load types
 import easingOptions from "../types/easing";
 // load functions
@@ -24,6 +25,7 @@ import AdvColorInfoInput from "../components/inputs/AdvColorInfoInput";
 // load components
 import ColorRow from "../components/ColorRow";
 import { ConnectedScatterplot } from "../components/Graph";
+import Footer from "../components/Footer";
 
 export default function Home() {
   const Session = useSessionContext();
@@ -88,41 +90,26 @@ export default function Home() {
 
   return (
     <main className="space-y-16 lg:p-16 md:p-8 p-4">
+      <nav>
+        <span>Editor</span> &middot;{" "}
+        <Link href="/library" className="hover:underline">
+          Library
+        </Link>{" "}
+        &middot;{" "}
+        <Link href="/about" className="hover:underline">
+          About
+        </Link>
+      </nav>
       {Session.providerLoaded ? (
         Session.configLoaded ? (
           <>
             <div id="primaryControls" className="flex flex-wrap gap-8">
               <div>
                 <ColorInput />
-                <p className="mt-2">Colorful v2.1.0</p>
-                <p>
-                  <a
-                    href="https://www.mattmcadams.com"
-                    className="underline"
-                    target="_blank"
-                  >
-                    Matt McAdams
-                  </a>{" "}
-                  &middot;{" "}
-                  <a
-                    href="https://github.com/MattMcAdams/color-tool"
-                    target="_blank"
-                    className="underline"
-                  >
-                    Open Source
-                  </a>{" "}
-                  &middot;{" "}
-                  <a
-                    className="underline"
-                    target="_blank"
-                    href="https://mattmcadams.com/donate"
-                  >
-                    Donate
-                  </a>
-                </p>
+                <Footer />
               </div>
-              <div className="flex flex-wrap gap-8">
-                <div className="space-y-4 w-80">
+              <div className="flex flex-wrap gap-8 w-full max-w-2xl">
+                <div className="space-y-4 max-w-xs w-full">
                   <p className="block font-mono font-bold text-base">Manage</p>
                   <Button
                     onClick={() => router.push("/library")}
@@ -147,7 +134,7 @@ export default function Home() {
                     )}
                   </div>
                 </div>
-                <div className="space-y-4 w-80">
+                <div className="space-y-4 max-w-xs w-full">
                   <p className="block font-mono font-bold text-base">Options</p>
                   <AdvColorInfoInput />
                   <div className="flex gap-4">
@@ -174,7 +161,7 @@ export default function Home() {
               <ColorRow config={Session.config} />
             </div>
             <div id="colorControls" className="flex flex-wrap gap-x-8 gap-y-12">
-              <div className="space-y-12 w-80">
+              <div className="space-y-12 w-full max-w-xs">
                 <NumberInput
                   name="darkCount"
                   label="Dark Count"
@@ -278,7 +265,7 @@ export default function Home() {
                   />
                 </div>
               </div>
-              <div className="space-y-12 w-80">
+              <div className="space-y-12 max-w-xs w-full">
                 <NumberInput
                   name="lightCount"
                   label="Light Count"
@@ -429,7 +416,7 @@ export default function Home() {
                   />
                 </figure>
               </div>
-              <div className="space-y-12 w-80">
+              <div className="space-y-12 max-w-xs w-full">
                 <TextInput
                   name="name"
                   label="Name"
