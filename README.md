@@ -46,6 +46,9 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 - Share settings via JSON export
 - Click button to copy all hex colors
 - Click a button to copy an SVG of all colors to be pasted into design software
+- Save palettes to the Library
+- Organize palettes into Groups
+- Export and import library data via JSON files
 
 ## Roadmap
 
