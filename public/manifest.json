@@ -1,7 +1,7 @@
 {
   "theme_color" : "#4a4a4a",
   "background_color" : "#000000",
-  "display" : "minimal-ui",
+  "display" : "standalone",
   "scope" : "/",
   "start_url" : "/",
   "name" : "ColorScale",
