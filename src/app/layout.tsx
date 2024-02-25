@@ -12,35 +12,40 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <title>ColorScale</title>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>ColorScale</title>
+        <meta name="application-name" content="ColorScale" />
+        <meta name="apple-mobile-web-app-title" content="ColorScale" />
+        <meta name="og:title" content="ColorScale" />
+        <meta name="twitter:title" content="ColorScale" />
         <meta
           name="description"
           content="A tool for creating and manipulating colors"
         />
-        <meta name="og:title" content="ColorScale" />
         <meta
           name="og:description"
           content="A tool for creating and manipulating color scales"
         />
-        <meta name="og:image" content="/thumbnail.png" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Colorful" />
         <meta
           name="twitter:description"
           content="A tool for creating and manipulating color scales"
         />
+
+        <meta name="og:image" content="/thumbnail.png" />
         <meta name="twitter:image" content="/thumbnail.png" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+
         <link rel="icon" href="/favicon.ico" sizes="32x32" />
         <link rel="shortcut icon" href="/favicon.ico" />
         <link rel="icon" href="/icon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <link rel="manifest" href="/manifest.webmanifest" />
+        <link rel="manifest" href="/manifest.json" />
 
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="ColorScale" />
+
         <meta name="format-detection" content="telephone=no" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="msapplication-TileColor" content="#000000" />
