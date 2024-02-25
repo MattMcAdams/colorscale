@@ -18,7 +18,7 @@ export const About = () => {
         <h1 className="text-3xl font-bold">About this project</h1>
         <Footer />
         <p>
-          Colorful was born from the need to generate color scales based on a
+          This tool was born from the need to generate color scales based on a
           key color. There are multiple tools similar to this one but none of
           them fit my exact needs. Namely, this app is heavily inspired by{" "}
           <a

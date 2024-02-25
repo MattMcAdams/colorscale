@@ -1,5 +1,5 @@
 {
-  "name": "colorful",
+  "name": "color-scale",
   "version": "2.2.0",
   "description": "A tool for creating and manipulating colors",
   "private": true,
@@ -11,10 +11,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/MattMcAdams/color-tool.git"
+    "url": "https://github.com/MattMcAdams/color-scale.git"
   },
   "bugs": {
-    "url": "https://github.com/MattMcAdams/color-tool/issues"
+    "url": "https://github.com/MattMcAdams/color-scale/issues"
   },
   "scripts": {
     "dev": "next dev",

@@ -3,7 +3,7 @@ import packageInfo from "../../package.json";
 export const Footer = () => {
   return (
     <div>
-      <p className="mt-2">Colorful v{packageInfo.version}</p>
+      <p className="mt-2">ColorScale v{packageInfo.version}</p>
       <p>
         <a
           href="https://www.mattmcadams.com"
