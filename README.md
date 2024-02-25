@@ -1,6 +1,6 @@
-# Colorful
+# ColorScale
 
-A tool to design color scales
+This tool was born from the need to generate color scales based on a key color. There are multiple tools similar to this one but none of them fit my exact needs.
 
 ![screenshot](/public/thumbnail.png)
 
