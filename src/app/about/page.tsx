@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Footer } from "../../components/Footer";
 
-export const About = () => {
+export default function About() {
   return (
     <main className="space-y-16 lg:p-16 md:p-8 p-4">
       <nav>
@@ -106,5 +106,3 @@ export const About = () => {
     </main>
   );
 }
-
-export default About;
