@@ -46,7 +46,7 @@ export const LibraryConfig = () => {
           href={`data:text/json;charset=utf-8,${encodeURIComponent(
             JSON.stringify(Session.library, null, 2)
           )}`}
-          download="colorful.json"
+          download="colorscale.json"
           className="grow basis-1/3 inline-block text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 font-medium rounded-lg text-sm px-5 transform active:scale-90 transition-transform py-2.5 text-center"
         >
           Download JSON
