@@ -13,6 +13,8 @@ interface Props {
   children: React.ReactNode;
 }
 
+const legacyProps = ['darkCount', 'lightCount', 'darkness', 'darknessEasing', 'lightness', 'lightnessEasing', 'darkRotation', 'darkRotationEasing', 'lightRotation', 'lightRotationEasing', 'darkSaturation', 'darkSaturationEasing', 'lightSaturation', 'lightSaturationEasing'];
+
 const Context = createContext<context>({
   ...defaults,
   loadConfig: nullProvider,
@@ -46,7 +48,7 @@ const Provider: React.FC<Props> = ({ children }) => {
   const [advColorInfo, setAdvColorInfo] = useState<boolean>(
     defaults.advColorInfo
   );
-  const [library, setLibrary] = useState<library>({configs: [], groups: []});
+  const [library, setLibrary] = useState<library>({ configs: [], groups: [] });
   const [libraryLoaded, setLibraryLoaded] = useState<boolean>(false);
 
   /* !SECTION Stores */
@@ -179,78 +181,31 @@ const Provider: React.FC<Props> = ({ children }) => {
   const loadConfig = useCallback((configString: string) => {
     const CONFIG = JSON.parse(configString || "{}");
     const newConfig = JSON.parse(JSON.stringify(defaults.config));
-    if (
-      CONFIG.darkCount ||
-      CONFIG.lightCount ||
-      CONFIG.darkness ||
-      CONFIG.darknessEasing ||
-      CONFIG.lightness ||
-      CONFIG.lightnessEasing ||
-      CONFIG.darkRotation ||
-      CONFIG.darkRotationEasing ||
-      CONFIG.lightRotation ||
-      CONFIG.lightRotationEasing ||
-      CONFIG.darkSaturation ||
-      CONFIG.darkSaturationEasing ||
-      CONFIG.lightSaturation ||
-      CONFIG.lightSaturationEasing
-    ) {
+    let legacyConfig = false;
+    legacyProps.forEach((key) => {
+      if (Object.hasOwn(CONFIG, key)) { legacyConfig = true; }
+    });
+    if (legacyConfig) {
       loadLegacyConfig(configString);
     } else {
-      if (CONFIG.keyColor !== undefined) {
-        newConfig.keyColor = CONFIG.keyColor;
+      ['keyColor', 'id', 'name'].forEach((key) => {
+        if (Object.hasOwn(CONFIG, key) && typeof CONFIG[key] !== 'object') {
+          newConfig[key] = CONFIG[key];
+        }
+      });
+      if (typeof CONFIG.light === 'object') {
+        Object.getOwnPropertyNames(defaults.config.light).forEach((key) => {
+          if (Object.hasOwn(CONFIG.light, key)) {
+            newConfig.light[key] = CONFIG.light[key];
+          }
+        });
       }
-      if (CONFIG.id !== undefined) {
-        newConfig.id = CONFIG.id;
-      }
-      if (CONFIG.name !== undefined) {
-        newConfig.name = CONFIG.name;
-      }
-      if (CONFIG.dark !== undefined) {
-        if (CONFIG.dark.count !== undefined) {
-          newConfig.dark.count = CONFIG.dark.count;
-        }
-        if (CONFIG.dark.brightness !== undefined) {
-          newConfig.dark.brightness = CONFIG.dark.brightness;
-        }
-        if (CONFIG.dark.brightnessEase !== undefined) {
-          newConfig.dark.brightnessEase = CONFIG.dark.brightnessEase;
-        }
-        if (CONFIG.dark.angle !== undefined) {
-          newConfig.dark.angle = CONFIG.dark.angle;
-        }
-        if (CONFIG.dark.angleEase !== undefined) {
-          newConfig.dark.angleEase = CONFIG.dark.angleEase;
-        }
-        if (CONFIG.dark.saturation !== undefined) {
-          newConfig.dark.saturation = CONFIG.dark.saturation;
-        }
-        if (CONFIG.dark.saturationEase !== undefined) {
-          newConfig.dark.saturationEase = CONFIG.dark.saturationEase;
-        }
-      }
-      if (CONFIG.light !== undefined) {
-        if (CONFIG.light.count !== undefined) {
-          newConfig.light.count = CONFIG.light.count;
-        }
-        if (CONFIG.light.brightness !== undefined) {
-          newConfig.light.brightness = CONFIG.light.brightness;
-        }
-        if (CONFIG.light.brightnessEase !== undefined) {
-          newConfig.light.brightnessEase = CONFIG.light.brightnessEase;
-        }
-        if (CONFIG.light.angle !== undefined) {
-          newConfig.light.angle = CONFIG.light.angle;
-        }
-        if (CONFIG.light.angleEase !== undefined) {
-          newConfig.light.angleEase = CONFIG.light.angleEase;
-        }
-        if (CONFIG.light.saturation !== undefined) {
-          newConfig.light.saturation = CONFIG.light.saturation;
-        }
-        if (CONFIG.light.saturationEase !== undefined) {
-          newConfig.light.saturationEase = CONFIG.light.saturationEase;
-        }
+      if (typeof CONFIG.dark === 'object') {
+        Object.getOwnPropertyNames(defaults.config.dark).forEach((key) => {
+          if (Object.hasOwn(CONFIG.dark, key)) {
+            newConfig.dark[key] = CONFIG.dark[key];
+          }
+        });
       }
       setConfig(newConfig);
     }
@@ -263,7 +218,7 @@ const Provider: React.FC<Props> = ({ children }) => {
   ================================================================= */
 
   useEffect(() => {
-    const CONFIG = localStorage.getItem("colorToolConfig");
+    const CONFIG = localStorage.getItem('colorToolConfig');
     if (!configLoaded && CONFIG) {
       loadConfig(CONFIG);
     } else if (!configLoaded && !CONFIG) {
@@ -324,7 +279,7 @@ const Provider: React.FC<Props> = ({ children }) => {
 
   function deleteFromLibrary(refConfig: config) {
     if (refConfig.id === config.id) {
-      const newConfig = { ...config }
+      const newConfig = { ...config };
       delete newConfig.id;
       setConfig(newConfig);
     }
@@ -335,7 +290,7 @@ const Provider: React.FC<Props> = ({ children }) => {
       // TODO: Loop through groups, deleting ID from matching groups
       setLibrary(newLibrary);
     } else {
-      console.error('No ID found for config, delete operation not performed.');
+      console.error("No ID found for config, delete operation not performed.");
     }
   }
 
@@ -355,29 +310,36 @@ const Provider: React.FC<Props> = ({ children }) => {
     const newGroup = { id: uuidv4(), name, configIDs: [] };
     newLibrary.groups.push(newGroup);
     setLibrary(newLibrary);
-  }
+  };
 
   const addToGroup = (configID: string, groupID: string) => {
     const newLibrary = { ...library };
-    const groupIndex = newLibrary.groups.findIndex((group) => group.id === groupID);
+    const groupIndex = newLibrary.groups.findIndex(
+      (group) => group.id === groupID
+    );
     newLibrary.groups[groupIndex].configIDs.push(configID);
     setLibrary(newLibrary);
-  }
+  };
 
   const removeFromGroup = (configID: string, groupID: string) => {
     const newLibrary = { ...library };
-    const groupIndex = newLibrary.groups.findIndex((group) => group.id === groupID);
-    const configIndex = newLibrary.groups[groupIndex].configIDs.indexOf(configID);
+    const groupIndex = newLibrary.groups.findIndex(
+      (group) => group.id === groupID
+    );
+    const configIndex =
+      newLibrary.groups[groupIndex].configIDs.indexOf(configID);
     newLibrary.groups[groupIndex].configIDs.splice(configIndex, 1);
     setLibrary(newLibrary);
-  }
+  };
 
   const deleteGroup = (groupID: string) => {
     const newLibrary = { ...library };
-    const groupIndex = newLibrary.groups.findIndex((group) => group.id === groupID);
+    const groupIndex = newLibrary.groups.findIndex(
+      (group) => group.id === groupID
+    );
     newLibrary.groups.splice(groupIndex, 1);
     setLibrary(newLibrary);
-  }
+  };
 
   const shiftGroup = (groupID: string, oldIndex: number, newIndex: number) => {
     const newLibrary = { ...library };
@@ -387,7 +349,7 @@ const Provider: React.FC<Props> = ({ children }) => {
       }
     });
     setLibrary(newLibrary);
-  }
+  };
 
   /* !SECTION Group functions */
   /* =================================================================
@@ -417,7 +379,7 @@ const Provider: React.FC<Props> = ({ children }) => {
 
   const loadLibrary = useCallback((libraryString: string) => {
     const localStore = JSON.parse(libraryString || "{configs: [], groups: []}");
-    const library: library = {configs: [], groups: []};
+    const library: library = { configs: [], groups: [] };
     for (const key in localStore.configs) {
       if (localStore.configs[key]) {
         library.configs.push(localStore.configs[key]);
